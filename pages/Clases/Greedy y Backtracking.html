@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Greedy y Backtracking - Zum's CPCFI Page</title>
+    <link rel="icon" type="image/png" href="../../assets/CPCFI.png">
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <script>
+    function copyCode(button) {
+        const codeBlock = button.nextElementSibling.querySelector('code');
+        navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+            button.innerText = "Copiado!";
+            setTimeout(() => button.innerText = "Copiar código", 2000);
+        });
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <img src="../../assets/CPCFI og.png" alt="CPCFI Logo" class="logo">
+
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../index.html">Inicio</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/clases.html">Clases</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/recursos.html">Recursos</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/contacto.html">Contacto</a>
+        </div>
+    </div>
+
+    <div class="main-content" id="main">
+        <div class="card-header">
+            <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="40px" class="section-logo">
+            <h1>Algoritmos Greedy y Backtracking</h1>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>¿Qué son estas técnicas?</h2>
+            <p><strong>Greedy (Voraz)</strong> y <strong>Backtracking (Vuelta Atrás)</strong> son dos enfoques algorítmicos fundamentales para resolver problemas de optimización y búsqueda. Aunque ambos exploran un gran número de posibilidades, lo hacen de maneras muy diferentes.</p>
+            <ul>
+                <li>Un algoritmo <strong>Greedy</strong> toma decisiones localmente óptimas en cada paso con la esperanza de encontrar una solución globalmente óptima. Es rápido pero no siempre funciona.</li>
+                <li>Un algoritmo de <strong>Backtracking</strong> construye soluciones candidatas de forma incremental y abandona una opción tan pronto como determina que no puede conducir a una solución válida (poda). Es más exhaustivo y, por lo general, más lento.</li>
+            </ul>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>💰 Algoritmos Greedy (Voraces)</h2>
+            <p>La idea principal es simple: en cada paso, elige la opción que parece la mejor en ese momento sin pensar en las consecuencias futuras. Esta estrategia funciona solo si el problema posee dos propiedades clave:</p>
+            <ul>
+                <li><strong>Propiedad de elección voraz:</strong> Una elección localmente óptima conduce a una solución globalmente óptima.</li>
+                <li><strong>Subestructura óptima:</strong> Una solución óptima al problema contiene soluciones óptimas a sus subproblemas.</li>
+            </ul>
+            <h3>Estructura General en C++:</h3>
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+// Estructura general de un algoritmo Greedy
+TipoSolucion algoritmoGreedy(vector<TipoDato>& candidatos) {
+    TipoSolucion solucion; // Inicializa la solución
+
+    // Ordenar los candidatos si es necesario. Este es un paso muy común.
+    sort(candidatos.begin(), candidatos.end(), criterioDeOrdenacion);
+
+    while (!candidatos.empty() && !esSolucionCompleta(solucion)) {
+        // 1. Seleccionar el mejor candidato actual
+        TipoDato mejorCandidato = seleccionarMejor(candidatos);
+
+        // 2. Verificar si es una elección factible
+        if (esFactible(solucion, mejorCandidato)) {
+            // 3. Añadir a la solución
+            agregarASolucion(solucion, mejorCandidato);
+        }
+        
+        // Remover el candidato de la lista de pendientes
+        removerCandidato(candidatos, mejorCandidato);
+    }
+
+    return solucion;
+}
+                </code></pre>
+            </div>
+            
+            <h3>Ejemplo Clásico: Problema de Selección de Actividades</h3>
+            <p>Dado un conjunto de actividades con un tiempo de inicio y fin, selecciona el máximo número de actividades que no se solapen. La estrategia Greedy es: <strong>ordenar las actividades por su tiempo de finalización</strong> y escoger siempre la siguiente actividad compatible que termine antes.</p>
+            
+            <h3>Implementación en C++ (Selección de Actividades):</h3>
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+#include &#60iostream>
+#include &#60vector>
+#include &#60algorithm>
+
+struct Actividad {
+    int inicio, fin;
+};
+
+bool compararActividades(const Actividad& a, const Actividad& b) {
+    return a.fin < b.fin;
+}
+
+void seleccionarActividades(std::vector<Actividad>& acts) {
+    // 1. Ordenar por tiempo de finalización
+    std::sort(acts.begin(), acts.end(), compararActividades);
+
+    std::cout << "Actividades seleccionadas: " << std::endl;
+    
+    // 2. La primera actividad siempre se selecciona
+    int i = 0;
+    std::cout << "(" << acts[i].inicio << ", " << acts[i].fin << ")" << std::endl;
+    
+    // 3. Iterar y elegir la siguiente actividad compatible
+    for (int j = 1; j < acts.size(); j++) {
+        if (acts[j].inicio >= acts[i].fin) {
+            std::cout << "(" << acts[j].inicio << ", " << acts[j].fin << ")" << std::endl;
+            i = j;
+        }
+    }
+}
+                </code></pre>
+            </div>
+        </div>
+        
+        <div class="unlinked-card">
+            <h2>🚨 ¿Cuándo falla un algoritmo Greedy?</h2>
+            <p>Greedy es poderoso pero no infalible. Un ejemplo clásico es el <strong>Problema del Cambio de Monedas</strong>. Si tienes monedas de {1, 5, 10} para dar 15 de cambio, el enfoque Greedy (tomar siempre la moneda más grande) funciona (10 + 5). Pero si las monedas son {1, 7, 10} y quieres dar 14, Greedy elegiría 10 + 1 + 1 + 1 + 1. La solución óptima es 7 + 7.</p>
+        </div>
+
+
+        <div class="unlinked-card">
+            <h2>↩ Algoritmos de Backtracking</h2>
+            <p>Backtracking explora sistemáticamente todas las posibles soluciones a un problema. Se puede visualizar como un recorrido en profundidad (DFS) de un <strong>árbol de espacio de estados</strong>. La clave es la <strong>poda</strong>: si una ruta parcial no puede llevar a una solución, se abandona (se "vuelve atrás") y se prueba otra.</p>
+            <ul>
+                <li>Se usa para problemas de decisión, optimización y enumeración.</li>
+                <li>Garantiza encontrar una solución si existe, pero puede ser lento.</li>
+                <li>La clave es definir el <strong>estado</strong>, las <strong>decisiones</strong> y las <strong>restricciones</strong>.</li>
+            </ul>
+            <h3>Estructura General en C++ (Recursiva):</h3>
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+void backtrack(Estado& estado, vector<Decision>& decisiones, Solucion& resultado) {
+    // Condición base: si el estado actual es una solución válida
+    if (esSolucion(estado)) {
+        procesarSolucion(resultado, estado);
+        return; // A veces se detiene aquí, a veces sigue buscando más soluciones
+    }
+
+    // Iterar sobre todas las posibles decisiones desde el estado actual
+    for (Decision decision : generarDecisiones(estado)) {
+        // 1. Aplicar la decisión
+        aplicar(estado, decision);
+
+        // 2. Poda: verificar si la nueva ruta es prometedora
+        if (esValido(estado)) {
+            // 3. Llamada recursiva
+            backtrack(estado, decisiones, resultado);
+        }
+        
+        // 4. Deshacer la decisión (el "backtrack")
+        deshacer(estado, decision);
+    }
+}
+                </code></pre>
+            </div>
+            
+            <h3>Ejemplo Clásico: Problema de las N-Reinas</h3>
+            <p>El objetivo es colocar N reinas en un tablero de N×N de manera que ninguna reina amenace a otra. Backtracking explora colocando una reina por fila, y si una colocación lleva a un conflicto, "vuelve atrás" y prueba la siguiente columna en la fila anterior.</p>
+            
+            <h3>Implementación en C++ (N-Reinas):</h3>
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+#include &#60iostream>
+#include &#60vector>
+
+bool esSeguro(int fila, int col, int n, const std::vector<std::string>& tablero) {
+    // Comprobar columna hacia arriba
+    for (int i = 0; i < fila; ++i) {
+        if (tablero[i][col] == 'Q') return false;
+    }
+    // Comprobar diagonal superior izquierda
+    for (int i = fila, j = col; i >= 0 && j >= 0; --i, --j) {
+        if (tablero[i][j] == 'Q') return false;
+    }
+    // Comprobar diagonal superior derecha
+    for (int i = fila, j = col; i >= 0 && j < n; --i, ++j) {
+        if (tablero[i][j] == 'Q') return false;
+    }
+    return true;
+}
+
+void resolverNReinas(int fila, int n, std::vector<std::string>& tablero, std::vector<std::vector<std::string>>& soluciones) {
+    if (fila == n) {
+        soluciones.push_back(tablero);
+        return;
+    }
+
+    for (int col = 0; col < n; ++col) {
+        if (esSeguro(fila, col, n, tablero)) {
+            tablero[fila][col] = 'Q';     // Tomar decisión
+            resolverNReinas(fila + 1, n, tablero, soluciones); // Recursión
+            tablero[fila][col] = '.';     // Backtrack
+        }
+    }
+}
+                </code></pre>
+            </div>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Comparación: Greedy vs. Backtracking</h2>
+            <ul>
+                <li><strong>Decisión:</strong> Greedy toma una decisión y nunca la reconsidera. Backtracking prueba todas las opciones y las deshace si no funcionan.</li>
+                <li><strong>Optimalidad:</strong> Greedy no siempre garantiza la solución óptima; Backtracking puede encontrar todas las soluciones óptimas (si se le deja explorar todo el espacio).</li>
+                <li><strong>Velocidad:</strong> Greedy es mucho más rápido, a menudo con complejidades como $O(N \log N)$ (por el ordenamiento) o $O(N)$. Backtracking puede tener complejidades exponenciales, como $O(2^N)$ o $O(N!)$, en el peor de los casos.</li>
+            </ul>
+        </div>
+        
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="30px" class="section-logo">
+                <h1>Ejercicios:</h1>
+            </div>
+            
+            <div class="card-header">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="20px" class="section-logo">
+                <a href="https://leetcode.com/problems/activity-selection-problem/" target="_blank" style="color: aliceblue;">Greedy: Activity Selection (LeetCode)</a>
+            </div>
+            
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/codeforces.png" alt="Codeforces Logo" width="20px" class="section-logo">
+                <a href="https://codeforces.com/problemset/problem/158/A" target="_blank" style="color: aliceblue;">Greedy: Next Round (Codeforces)</a>
+            </div>
+
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="20px" class="section-logo">
+                <a href="https://leetcode.com/problems/permutations/" target="_blank" style="color: aliceblue;">Backtracking: Permutations (LeetCode)</a>
+            </div>
+
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="20px" class="section-logo">
+                <a href="https://leetcode.com/problems/sudoku-solver/" target="_blank" style="color: aliceblue;">Backtracking: Sudoku Solver (LeetCode)</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Zum's CPCFI Page. Todos los derechos reservados.</p>
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const main = document.getElementById("main");
+
+        if (localStorage.getItem("sidebarOpen") === "true") {
+            sidebar.classList.add("active");
+            main.classList.add("active");
+        }
+
+        function toggleSidebar() {
+            sidebar.classList.toggle("active");
+            main.classList.toggle("active");
+            localStorage.setItem("sidebarOpen", sidebar.classList.contains("active"));
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
+    <script>
+      Prism.highlightAll();
+    </script>
+</body>
+</html>
