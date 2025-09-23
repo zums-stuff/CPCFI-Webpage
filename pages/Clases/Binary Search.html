@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Búsqueda Binaria y Bounds - Zum's CPCFI Page</title>
+    <link rel="icon" type="image/png" href="../../assets/CPCFI.png">
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <script>
+    function copyCode(button) {
+        const codeBlock = button.nextElementSibling.querySelector('code');
+        navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+            button.innerText = "Copiado!";
+            setTimeout(() => button.innerText = "Copiar código", 2000);
+        });
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <img src="../../assets/CPCFI og.png" alt="CPCFI Logo" class="logo">
+
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../index.html">Inicio</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/clases.html">Clases</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/recursos.html">Recursos</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/contacto.html">Contacto</a>
+        </div>
+    </div>
+
+    <div class="main-content" id="main">
+        <div class="card-header">
+            <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="40px" class="section-logo">
+            <h1>Búsqueda Binaria, Lower y Upper Bound</h1>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>¿Qué es la Búsqueda Binaria? 🔍</h2>
+            <p>La <strong>Búsqueda Binaria (Binary Search)</strong> es un algoritmo de búsqueda muy eficiente que opera sobre un espacio de búsqueda que debe estar <strong>ordenado</strong> o ser <strong>monótono</strong> (no decreciente). Su estrategia se basa en el principio de "divide y vencerás", partiendo el arreglo en mitades sucesivas para encontrar un valor objetivo o una respuesta óptima.</p>
+            <p>Su principal ventaja es su increíble velocidad, con una complejidad temporal de <strong> O(log n)</strong>.</p>
+        </div>
+
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="https://i.imgur.com/sd508O2.png" alt="Binary Search Icon" style="filter:invert(1)" width="30px" class="section-logo">
+                <h2>Algoritmo de Búsqueda Binaria</h2>
+            </div>
+            <h3>Requisitos:</h3>
+            <ul>
+                <li>La estructura de datos (generalmente un arreglo o vector) debe estar <strong>ordenada</strong>.</li>
+                <li>El acceso a cualquier elemento de la estructura debe tomar tiempo <strong>constante</strong> (O(1)).</li>
+            </ul>
+
+            <h3>Pasos del Algoritmo:</h3>
+            <ol>
+                <li>Se define un espacio de búsqueda con dos punteros, `low` (inicio) y `high` (fin).</li>
+                <li>Se calcula el punto medio: `mid = low + (high - low) / 2`.</li>
+                <li>Se compara el valor en `mid` con el valor objetivo (`key`).</li>
+                <li>Si `array[mid] == key`, el valor se ha encontrado.</li>
+                <li>Si `key < array[mid]`, significa que el objetivo solo puede estar en la mitad izquierda. Se actualiza `high = mid - 1`.</li>
+                <li>Si `key > array[mid]`, el objetivo solo puede estar en la mitad derecha. Se actualiza `low = mid + 1`.</li>
+            </ol>
+            <p>Este proceso se repite hasta que `low` cruce a `high`, lo que significa que el elemento no está en el arreglo.</p>
+
+            <h3>Implementación en C++:</h3>
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+int binarySearch(const std::vector<int>& arr, int key) {
+    int low = 0;
+    int high = arr.size() - 1;
+
+    while (low <= high) {
+        int mid = low + (high - low) / 2; // Evita overflow para 'low+high' grandes
+
+        if (arr[mid] == key) {
+            return mid; // Elemento encontrado, retorna el índice
+        } else if (key < arr[mid]) {
+            high = mid - 1; // Buscar en la mitad izquierda
+        } else {
+            low = mid + 1; // Buscar en la mitad derecha
+        }
+    }
+
+    return -1; // Elemento no encontrado
+}
+                </code></pre>
+            </div>
+        </div>
+        
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="https://i.imgur.com/KqfG2WV.png" alt="Bounds Icon" style="filter:invert(1)" width="30px" class="section-logo">
+                <h2>Funciones `lower_bound` y `upper_bound`</h2>
+            </div>
+            <p>En C++, la STL nos proporciona dos funciones muy potentes que implementan variantes de la búsqueda binaria: `std::lower_bound` y `std::upper_bound`.</p>
+            
+            <h3>Definición Práctica:</h3>
+            <ul>
+                <li><code class="language-none">lower_bound(k)</code>: Devuelve un puntero al <strong>primer elemento `e`</strong> que es mayor o igual a `k`. (Condición: `k <= e`).</li>
+                <li><code class="language-none">upper_bound(k)</code>: Devuelve un puntero al <strong>primer elemento `e`</strong> que es estrictamente mayor que `k`. (Condición: `k < e`).</li>
+            </ul>
+
+            <h3>Ejemplo Visual:</h3>
+            <p>Para un valor `k = 3` en el siguiente arreglo:</p>
+            <pre><code class="language-none">
+índice: 0  1  2  3  4  5  6  7  8  9
+valor: [1, 2, 2, 3, 3, 3, 3, 4, 5, 6]
+                  ^           ^
+                  |           |
+             lower_bound(3)   upper_bound(3)
+             (índice 3)       (índice 7)
+            </code></pre>
+
+            <h3>Sintaxis en C++ y Obtención de Índices:</h3>
+            <p>Ambas funciones retornan un <strong>iterador</strong>. Para obtener el índice numérico, simplemente restamos el iterador `begin()` del vector.</p>
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+int main() {
+    std::vector<int> v = {1, 2, 2, 3, 3, 3, 3, 4, 5, 6};
+    int k = 3;
+
+    // Obtener iteradores
+    auto lb = std::lower_bound(v.begin(), v.end(), k);
+    auto ub = std::upper_bound(v.begin(), v.end(), k);
+
+    // Obtener índices
+    int index_lb = lb - v.begin();
+    int index_ub = ub - v.begin();
+
+    std::cout << "El lower_bound de 3 esta en el indice: " << index_lb << std::endl; // Salida: 3
+    std::cout << "El upper_bound de 3 esta en el indice: " << index_ub << std::endl; // Salida: 7
+    
+    return 0;
+}
+                </code></pre>
+            </div>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>💡 Aplicaciones y Trucos Comunes</h2>
+            <h3>1. Contar ocurrencias de un elemento</h3>
+            <p>Puedes calcular cuántas veces aparece un elemento `k` en un arreglo ordenado de forma muy eficiente restando los punteros de `upper_bound` y `lower_bound`.</p>
+            <pre><code class="language-clike">int count = upper_bound(v.begin(), v.end(), k) - lower_bound(v.begin(), v.end(), k);</code></pre>
+            <p>En el ejemplo anterior, `count` sería `7 - 3 = 4`, que es el número de veces que aparece el 3.</p>
+
+            <h3>2. Búsqueda Binaria sobre la Respuesta</h3>
+            <p>Es una técnica avanzada donde no buscas un valor en un arreglo, sino que buscas la <strong>respuesta óptima</strong> (mínima o máxima) a un problema. Se aplica a problemas donde puedes verificar si una respuesta `x` es posible. Si puedes, intentas una respuesta mejor; si no, una peor.</p>
+        </div>
+
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="30px" class="section-logo">
+                <h1>Ejercicios:</h1>
+            </div>
+            
+            <div class="card-header">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="20px" class="section-logo">
+                <a href="https://leetcode.com/problems/binary-search/" target="_blank" style="color: aliceblue;">704. Binary Search (LeetCode)</a>
+            </div>
+            
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="20px" class="section-logo">
+                <a href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/" target="_blank" style="color: aliceblue;">34. Find First and Last Position (LeetCode)</a>
+            </div>
+
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/codeforces.png" alt="Codeforces Logo" width="20px" class="section-logo">
+                <a href="https://codeforces.com/edu/course/2/lesson/6/1/practice/contest/283911/problem/A" target="_blank" style="color: aliceblue;">Step 1 - Binary Search (Codeforces)</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Zum's CPCFI Page. Todos los derechos reservados.</p>
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const main = document.getElementById("main");
+
+        if (localStorage.getItem("sidebarOpen") === "true") {
+            sidebar.classList.add("active");
+            main.classList.add("active");
+        }
+
+        function toggleSidebar() {
+            sidebar.classList.toggle("active");
+            main.classList.toggle("active");
+            localStorage.setItem("sidebarOpen", sidebar.classList.contains("active"));
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
+    <script>
+      Prism.highlightAll();
+    </script>
+</body>
+</html>
