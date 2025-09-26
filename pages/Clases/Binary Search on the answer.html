@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Binary Search on the Answer - Zum's CPCFI Page</title>
+    <link rel="icon" type="image/png" href="../../assets/CPCFI.png">
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <script>
+    function copyCode(button) {
+        const codeBlock = button.nextElementSibling.querySelector('code');
+        navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+            button.innerText = "Copiado!";
+            setTimeout(() => button.innerText = "Copiar código", 2000);
+        });
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <img src="../../assets/CPCFI og.png" alt="CPCFI Logo" class="logo">
+
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../index.html">Inicio</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/clases.html">Clases</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/recursos.html">Recursos</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/contacto.html">Contacto</a>
+        </div>
+    </div>
+
+    <div class="main-content" id="main">
+        <div class="card-header">
+            <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="40px" class="section-logo">
+            <h1>Búsqueda Binaria sobre la Respuesta</h1>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>¿Qué es Binary Search on the Answer?</h2>
+            <p>Es una técnica de optimización que usa búsqueda binaria sobre un <strong>rango de posibles respuestas</strong> a un problema, en lugar de sobre una estructura de datos como un arreglo.</p>
+            <ul>
+                <li>Se aplica a problemas donde necesitamos encontrar un <strong>valor máximo o mínimo</strong> que cumpla una cierta condición.</li>
+                <li>La idea clave es transformar el problema de "encontrar un valor" a un problema de decisión: <strong>"¿Es un valor "k" una respuesta válida?"</strong>.</li>
+                <li>Si podemos responder esa pregunta de manera eficiente, podemos encontrar la solución óptima en tiempo logarítmico.</li>
+            </ul>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>La Clave: Una Función Monótona 📈</h2>
+            <p>Para que esta técnica funcione, el problema debe tener una <strong>propiedad monótona</strong>. Esto significa que si una respuesta "k" es válida, todas las respuestas menores que "k" (o mayores, dependiendo del problema) también deben ser válidas.</p>
+            <p>Por ejemplo, en el problema de encontrar el "n" máximo tal que n² &lt; X, la función de decisión es f(n) = (n² &lt; X).</p>
+            <ul>
+                <li>Si f(8) es "True" (porque 64 &lt; X), entonces f(7), f(6), &dots; también serán "True".</li>
+                <li>Si f(11) es "False" (porque 121 &ge; X), entonces f(12), f(13), &dots; también serán "False".</li>
+            </ul>
+            <p>Esta propiedad nos permite descartar la mitad del espacio de búsqueda en cada paso.</p>
+        </div>
+        
+        <div class="unlinked-card">
+            <div class="card-header">
+                <h2>Ejemplo: Encontrar n máximo tal que n² &lt; X</h2>
+            </div>
+            <p>Dado un entero positivo "X", queremos encontrar el máximo entero positivo "n" que satisfaga n² &lt; X. Por ejemplo, para "X = 101", la respuesta es 10, ya que 10² = 100 &lt; 101, pero 11² = 121 no es menor que 101.</p>
+            <p>En lugar de probar "n = 1, 2, 3, ..." (lo que sería lento, O(√X)), podemos buscar binariamente la respuesta en el rango "[0, X]", logrando una complejidad de O(log X).</p>
+            
+            <h3>Implementación en C++:</h3>
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+#include &lt;iostream&gt;
+
+// Función de decisión (predicado monótono)
+// Devuelve true si n² &lt; X
+bool check(long long n, int X) {
+    return n * n < X;
+}
+
+int main() {
+    int X = 101;
+    long long low = 0, high = X;
+    long long ans = 0;
+
+    while (low <= high) {
+        long long mid = low + (high - low) / 2;
+
+        if (check(mid, X)) {
+            // 'mid' es una respuesta válida.
+            // La guardamos y probamos con un valor más grande.
+            ans = mid;
+            low = mid + 1;
+        } else {
+            // 'mid' no es una respuesta válida.
+            // Probamos con un valor más pequeño.
+            high = mid - 1;
+        }
+    }
+
+    std::cout << "The maximum n is: " << ans << std::endl;
+    return 0;
+}
+                </code></pre>
+            </div>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Pasos para Aplicar la Técnica 📝</h2>
+            <ol>
+                <li><strong>Definir el Espacio de Búsqueda [L, R]:</strong> Identifica los límites inferior y superior para la posible respuesta.</li>
+                <li><strong>Crear la Función de Decisión "check(k)":</strong> Esta función debe ser monótona y determinar si un valor "k" es una solución válida.</li>
+                <li><strong>Implementar el Bucle de Búsqueda Binaria:</strong> Usa la función "check(k)" para ajustar los límites "L" y "R" hasta encontrar la respuesta óptima.</li>
+            </ol>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Problema de Ejemplo: Codeforces 1221C - Perfect Teams</h2>
+            <p>Tienes "c" estudiantes programadores, "m" matemáticos y "x" sin especialización. Un equipo "perfecto" tiene 3 miembros, con al menos 1 programador y 1 matemático. ¿Cuál es el máximo número de equipos perfectos que puedes formar?</p>
+            <p>La función "check(k)" sería: "¿Es posible formar "k" equipos?". Si se pueden formar "k" equipos, se pueden formar "k-1". Si no se pueden, tampoco se podrán "k+1". Esta es la propiedad monótona que nos permite usar Binary Search on the Answer.</p>
+
+            <h3>Implementación en C++:</h3>
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+#include &lt;bits/stdc++.h&gt;
+using namespace std;
+
+// check(k): ¿Podemos formar k equipos?
+bool canMake(long long k, long long c, long long m, long long x) {
+    // Requerimos k programadores y k matemáticos.
+    // El resto de estudiantes (c-k, m-k, y x) deben sumar
+    // lo suficiente para completar los k equipos de 3.
+    if (c < k || m < k) return false;
+    return (c - k) + (m - k) + x >= k;
+}
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    int q;
+    cin >> q;
+    while (q--) {
+        long long c, m, x;
+        cin >> c >> m >> x;
+
+        // El número de equipos no puede ser mayor que el min(c, m)
+        long long low = 0, high = min(c, m), ans = 0;
+
+        while (low <= high) {
+            long long mid = low + (high - low) / 2;
+            if (canMake(mid, c, m, x)) {
+                ans = mid;
+                low = mid + 1; // Intentar formar más equipos
+            } else {
+                high = mid - 1; // No se puede, intentar con menos
+            }
+        }
+        cout << ans << "\n";
+    }
+    return 0;
+}
+                </code></pre>
+            </div>
+        </div>
+
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="30px" class="section-logo">
+                <h1>Ejercicios:</h1>
+            </div>
+            
+            <div class="card-header">
+                <img src="../../assets/codeforces.png" alt="Codeforces Logo" width="20px" class="section-logo">
+                <a href="https://codeforces.com/problemset/problem/1221/C" target="_blank" style="color: aliceblue;">1221C - Perfect Teams</a>
+            </div>
+
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/codeforces.png" alt="Codeforces Logo" width="20px" class="section-logo">
+                <a href="https://codeforces.com/problemset/problem/1873/E" target="_blank" style="color: aliceblue;">1873E - Building an Aquarium</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Zum's CPCFI Page. Todos los derechos reservados.</p>
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const main = document.getElementById("main");
+
+        if (localStorage.getItem("sidebarOpen") === "true") {
+            sidebar.classList.add("active");
+            main.classList.add("active");
+        }
+
+        function toggleSidebar() {
+            sidebar.classList.toggle("active");
+            main.classList.toggle("active");
+            localStorage.setItem("sidebarOpen", sidebar.classList.contains("active"));
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
+    <script>
+      Prism.highlightAll();
+    </script>
+</body>
+</html>
