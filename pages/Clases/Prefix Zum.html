@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Sumas de Prefijos y Técnicas Derivadas - Zum's CPCFI Page</title>
+    <link rel="icon" type="image/png" href="../../assets/CPCFI.png">
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <script>
+    function copyCode(button) {
+        const codeBlock = button.nextElementSibling.querySelector('code');
+        navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+            button.innerText = "Copiado!";
+            setTimeout(() => button.innerText = "Copiar código", 2000);
+        });
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <img src="../../assets/CPCFI og.png" alt="CPCFI Logo" class="logo">
+
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../index.html">Inicio</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/clases.html">Clases</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/recursos.html">Recursos</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/contacto.html">Contacto</a>
+        </div>
+    </div>
+
+    <div class="main-content" id="main">
+        <div class="card-header">
+            <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="40px" class="section-logo">
+            <h1>Prefix/Suffix Zum</h1><h3>(Difference Array, XOR, GCD)</h3>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>El Problema: Range Zum Queries</h2>
+            <p>Supongamos que tenemos un arreglo de <strong>N</strong> números y nos hacen <strong>Q</strong> preguntas. Cada pregunta es: "¿cuál es la suma de los elementos entre el índice <strong>L</strong> y <strong>R</strong>?".</p>
+            <p>La solución por fuerza bruta sería usar un ciclo para cada pregunta. Esto tomaría tiempo O(N) por consulta, resultando en una complejidad total de <strong>O(N·Q)</strong>, lo cual es demasiado lento si N y Q son grandes.</p>
+            <p><strong>Nuestro objetivo:</strong> responder cada pregunta en tiempo constante, <strong>O(1)</strong>.</p>
+        </div>
+
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="/../assets/zum.png" alt="Prefix Zum Icon"  width="100px" class="section-logo">
+                <h2>La Solución: Prefix Zum</h2>
+            </div>
+            <p>Un arreglo de Sumas de Prefijos (o Arreglo Acumulativo) es una estructura donde cada elemento <code>P[i]</code> guarda la suma de todos los elementos del arreglo original desde el índice 0 hasta <code>i</code>.</p>
+            
+            <h3>Construcción y Uso</h3>
+            <p>Para un arreglo original <strong>A</strong>, construimos <strong>P</strong> de la siguiente forma: <code>P[i] = P[i-1] + A[i]</code>. Una vez construido, la suma del rango <code>[L, R]</code> se calcula con la fórmula:</p>
+            <pre><code class="language-none">Suma(L, R) = P[R] - P[L-1]</code></pre>
+            <p><strong>Caso especial:</strong> Si <code>L = 0</code>, la suma es simplemente <code>P[R]</code>.</p>
+
+            <h3>Implementación en C++:</h3>
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+#include &lt;iostream&gt;
+#include &lt;vector&gt;
+using namespace std;
+
+int main() {
+    vector<long long> A = {2, 4, 1, 7, 6};
+    int n = A.size();
+    vector<long long> prefixSum(n);
+
+    // Construcción en O(N)
+    prefixSum[0] = A[0];
+    for (int i = 1; i < n; ++i)
+        prefixSum[i] = prefixSum[i-1] + A[i];
+    
+    // Consulta de rango [2, 4] en O(1)
+    int L = 2, R = 4;
+    long long suma = P[R] - P[L-1]; // P[4] - P[1] = 20 - 6 = 14
+    cout << "Suma del rango [2, 4] es: " << suma << std::endl;
+    
+    return 0;
+}
+                </code></pre>
+            </div>
+        </div>
+
+        <div class="unlinked-card">
+             <h2>El Gemelo: Sumas de Sufijos (Suffix Sum)</h2>
+             <p>Este es el espejo del Prefix Sum, a veces llamado "el hermano no querido". Es un arreglo <code>S</code> donde cada elemento <code>S[i]</code> contiene la suma de todos los elementos desde el índice <code>i</code> hasta el final. Se construye de derecha a izquierda y es útil en problemas donde necesitas comparar la suma de la parte izquierda y derecha de un arreglo.</p>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>🔄 La Contraparte: Difference Array</h2>
+            <p>Si Prefix Zum es para <strong>consultas de rango</strong>, el Arreglo de Diferencias es para <strong>actualizaciones de rango</strong>. Almacena la diferencia entre elementos consecutivos: <code>diff[i] = arr[i] - arr[i-1]</code>.</p>
+            <p>La magia está en que <strong>el arreglo original es la suma de prefijos del arreglo de diferencias</strong>. Esto nos permite hacer actualizaciones de rango de forma muy eficiente.</p>
+            
+            <h3>Actualización de Rango en O(1)</h3>
+            <p>Para sumar un valor <code>x</code> a todo el rango <code>[L, R]</code> en el arreglo original, solo necesitamos dos operaciones en el arreglo de diferencias:</p>
+            <ul>
+                <li><code>D[L] += x;</code>  // Marca el inicio del cambio.</li>
+                <li><code>D[R+1] -= x;</code> // Cancela el efecto de 'x' a partir de R+1.</li>
+            </ul>
+            <p>Después de realizar todas las actualizaciones, se reconstruye el arreglo final calculando la suma de prefijos del arreglo de diferencias en <strong>O(N)</strong>.</p>
+            <p><strong>Limitaciones:</strong> Esta técnica es ideal para cuando tienes muchas actualizaciones y una sola reconstrucción final. No permite consultas rápidas del valor de un elemento individual.</p>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Variaciones</h2>
+            <h3>Prefix Zum con XOR</h3>
+            <p>La misma idea de suma acumulativa, pero usando el operador <strong>XOR</strong> en lugar de la suma. La fórmula para el XOR de un rango <code>[L, R]</code> es:</p>
+            <pre><code class="language-none">XOR_Rango(L, R) = P_xor[R] ^ P_xor[L-1]</code></pre>
+            <p>Esto funciona gracias a la propiedad de involución de XOR (<code>A ^ A = 0</code>), que permite "cancelar" el prefijo no deseado. Es extremadamente útil para problemas de XOR en rangos.</p>
+            
+            <h3>Prefix Zum con GCD (Máximo Común Divisor)</h3>
+            <p><strong>¡Cuidado!</strong> La fórmula de prefijos <strong>no funciona</strong> para el GCD porque no tiene una operación inversa. No podemos "restar" el GCD de un prefijo.</p>
+            <p>Para resolver consultas de GCD en un rango, se necesitan estructuras más avanzadas:</p>
+            <ul>
+                <li><strong>Sparse Table:</strong> Si el arreglo es estático (no cambia), permite consultas de GCD en <strong>O(1)</strong> después de un pre-cálculo.</li>
+                <li><strong>Segment Tree:</strong> Es la solución más flexible. Permite consultas y actualizaciones en <strong>O(log N)</strong>. Las sumas de prefijos son la base conceptual para entender esta poderosa estructura.</li>
+            </ul>
+        </div>
+
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="30px" class="section-logo">
+                <h1>Ejercicios:</h1>
+            </div>
+            
+            <div class="card-header">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="20px" class="section-logo">
+                <a href="https://leetcode.com/problems/range-sum-query-immutable/" target="_blank" style="color: aliceblue;">303. Range Sum Query - Immutable (Prefix Sum)</a>
+            </div>
+            
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/codeforces.png" alt="Codeforces Logo" width="20px" class="section-logo">
+                <a href="https://codeforces.com/problemset/problem/276/C" target="_blank" style="color: aliceblue;">1709 B. Also Try Minecraft</a>
+            </div>
+
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="20px" class="section-logo">
+                <a href="https://leetcode.com/problems/xor-queries-of-a-subarray/" target="_blank" style="color: aliceblue;">1310. XOR Queries of a Subarray (Prefix Zum XOR)</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Zum's CPCFI Page. Todos los derechos reservados.</p>
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const main = document.getElementById("main");
+
+        if (localStorage.getItem("sidebarOpen") === "true") {
+            sidebar.classList.add("active");
+            main.classList.add("active");
+        }
+
+        function toggleSidebar() {
+            sidebar.classList.toggle("active");
+            main.classList.toggle("active");
+            localStorage.setItem("sidebarOpen", sidebar.classList.contains("active"));
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
+    <script>
+      Prism.highlightAll();
+    </script>
+</body>
+</html>
