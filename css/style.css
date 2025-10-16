@@ -184,19 +184,17 @@ pre {
 }
 
 .dp-table th, .dp-table td {
-    border: 1px solid #4a4a4e; /* Bordes de celda sutiles */
-    padding: 10px 15px; /* Espacio interno de las celdas */
+    border: 1px solid #4a4a4e; 
+    padding: 10px 15px; 
 }
 
-/* Estilo para las celdas de encabezado (letras) */
 .dp-table th {
     background-color: #3a3a3c;
     color: #c9c8c6;
 }
 
-/* Estilo para la celda con la respuesta final */
 .dp-table .final-answer {
-    background-color: #2e2d37; /* Un fondo destacado */
+    background-color: #2e2d37;
     color: #7A7291;
     font-weight: bold;
 }
