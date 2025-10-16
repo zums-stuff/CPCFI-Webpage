@@ -155,6 +155,48 @@ body {
             background-color: #666;
         }
 
-pre[class*="language-"] {
-    border-radius: 10px; /* Ajusta el valor a tu gusto */
+/* Estilo para TODOS los bloques de texto preformateado */
+pre {
+    background-color: #2d2d2d; /* Color de fondo de Prism Tomorrow */
+    padding: 1em;
+    border-radius: 10px;
+    font-size: 15px;      /* Un poco más grande para mejor legibilidad */
+    line-height: 1.5;     /* Aumenta el espacio entre líneas */
+    overflow: auto;       /* Añade scroll si el contenido es muy ancho */
+}
+
+:not(pre) > code {
+    background-color: #3a3a3c; /* Un fondo gris oscuro, ligeramente más claro que las tarjetas */
+    color: #e0dccf;
+    padding: 3px 6px;
+    border-radius: 5px;
+    font-size: 1.3em; /* Ajusta este valor si lo quieres más grande o pequeño */
+}
+
+
+/* --- Estilos para la tabla de DP --- */
+.dp-table {
+    width: auto; /* La tabla tomará el ancho que necesite */
+    margin: 20px auto; /* Centra la tabla horizontalmente */
+    border-collapse: collapse; /* Une los bordes de las celdas */
+    font-size: 16px;
+    text-align: center;
+}
+
+.dp-table th, .dp-table td {
+    border: 1px solid #4a4a4e; /* Bordes de celda sutiles */
+    padding: 10px 15px; /* Espacio interno de las celdas */
+}
+
+/* Estilo para las celdas de encabezado (letras) */
+.dp-table th {
+    background-color: #3a3a3c;
+    color: #c9c8c6;
+}
+
+/* Estilo para la celda con la respuesta final */
+.dp-table .final-answer {
+    background-color: #2e2d37; /* Un fondo destacado */
+    color: #7A7291;
+    font-weight: bold;
 }

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Distance (DP) - Zum's CPCFI Page</title>
+    <link rel="icon" type="image/png" href="../../assets/CPCFI.png">
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <script>
+    function copyCode(button) {
+        const codeBlock = button.nextElementSibling.querySelector('code');
+        navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+            button.innerText = "Copiado!";
+            setTimeout(() => button.innerText = "Copiar código", 2000);
+        });
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <img src="../../assets/CPCFI og.png" alt="CPCFI Logo" class="logo">
+
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../index.html">Inicio</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/clases.html">Clases</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/recursos.html">Recursos</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/contacto.html">Contacto</a>
+        </div>
+    </div>
+
+    <div class="main-content" id="main">
+        <div class="card-header">
+            <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="40px" class="section-logo">
+            <h1>Edit Distance</h1>
+        </div>
+        Para reducir ambigüedades, en este artículo nos referiremos a la cadena vacía como <code>ε</code> <small>(epsilon)</small>.
+
+        <div class="unlinked-card">
+            <h2>Problema:</h2>
+            <p>Dadas dos cadenas <code>s1</code> y <code>s2</code>, el objetivo es encontrar el <strong>número mínimo de operaciones</strong> para convertir <code>s1</code> en <code>s2</code>.</p>
+            <p>Las operaciones permitidas son:</p>
+            <ul>
+                <li><strong>Insertar</strong> un carácter.</li>
+                <li><strong>Eliminar</strong> un carácter.</li>
+                <li><strong>Reemplazar</strong> un carácter.</li>
+            </ul>
+            <p>Este es un problema clásico de optimización que se resuelve elegantemente con Programación Dinámica.</p>
+        </div>
+
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="https://i.imgur.com/sd508O2.png" alt="DP Icon" style="filter:invert(1)" width="30px" class="section-logo">
+                <h2>Subproblemas y Recurrencia</h2>
+            </div>
+            <p>La clave de la DP es resolver un problema grande dividiéndolo en subproblemas más pequeños. En lugar de pensar en los strings completos, nos enfocamos en sus prefijos.</p>
+            <p>Si queremos calcular <code>dist(s1, s2)</code>, consideramos los últimos caracteres. Si <code>s1 = "...a"</code> y <code>s2 = "...b"</code>:</p>
+            <ul>
+                <li><strong>Si a == b:</strong> ¡Genial! Los últimos caracteres coinciden, no necesitamos hacer nada con ellos. El problema se reduce a calcular <code>dist("...", "...")</code> sin costo adicional.</li>
+                <li><strong>Si a != b:</strong> Debemos realizar una operación. Tenemos 3 opciones y elegimos la más barata:
+                    <ol>
+                        <li><strong>Reemplazar 'a' por 'b':</strong> El costo es 1 + <code>dist("...", "...")</code>.</li>
+                        <li><strong>Eliminar 'a' de s1:</strong> El costo es 1 + <code>dist("...", "...b")</code>.</li>
+                        <li><strong>Insertar 'b' en s1:</strong> El costo es 1 + <code>dist("...a", "...")</code>.</li>
+                    </ol>
+                </li>
+            </ul>
+            <p>Esta relación de subproblemas que se repiten es la señal para usar una tabla de DP.</p>
+        </div>
+        
+        <div class="unlinked-card">
+    <h2>Los Casos Base</h2>
+    <p>Antes de poder calcular las soluciones a los subproblemas complejos, necesitamos establecer los puntos de partida. Estos son los <strong>casos base</strong>, que corresponden a las situaciones más simples: convertir un string en un string vacío o viceversa. En nuestra analogía, estos son los bordes del mapa.</p>
+    
+    <h3>1. La Primera Fila: Convertir <code>ε</code> en s2</h3>
+    <p>La primera fila de la tabla, <code>dp[0][j]</code>, representa el costo de convertir un string vacío (los primeros 0 caracteres de <code>s1</code>) en un prefijo de <code>s2</code> de longitud <code>j</code>. La única manera de hacerlo es mediante <strong>inserciones</strong>. Para obtener un string de <code>j</code> caracteres a partir de la nada, necesitas <code>j</code> inserciones.</p>
+    <ul>
+        <li><strong>La Fórmula:</strong> <code>dp[0][j] = j</code></li>
+    </ul>
+
+    <h3>2. La Primera Columna: Convertir s1 en <code>ε</code></h3>
+    <p>La primera columna, <code>dp[i][0]</code>, representa el costo de convertir un prefijo de <code>s1</code> de longitud <code>i</code> en un string vacío. La única manera de lograrlo es mediante <strong>eliminaciones</strong>. Para deshacerte de <code>i</code> caracteres, necesitas <code>i</code> eliminaciones.</p>
+    <ul>
+        <li><strong>La Fórmula:</strong> <code>dp[i][0] = i</code></li>
+    </ul>
+
+    <h3>Visualización General</h3>
+    <p>Con estos casos base, nuestra rejilla de DP siempre comenzará de la siguiente manera:</p>
+
+    <table class="dp-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>""</th>
+                <th>s2[0]</th>
+                <th>s2[1]</th>
+                <th>s2[2]</th>
+                <th>...</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>""</th>
+                <td>0</td>
+                <td>1</td>
+                <td>2</td>
+                <td>3</td>
+                <td>...</td>
+            </tr>
+            <tr>
+                <th>s1[0]</th>
+                <td>1</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <th>s1[1]</th>
+                <td>2</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+             <tr>
+                <th>...</th>
+                <td>...</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="margin-top: 15px;">Una vez que estos bordes están establecidos, ya tenemos los valores iniciales necesarios para que la fórmula principal de DP pueda empezar a rellenar el resto de la tabla.</p>
+</div>
+
+        <div class="unlinked-card">
+            <h2>Recorrer el Grid</h2>
+            <p>Podemos visualizar el problema como un viaje en una rejilla. Cada celda <code>dp[i][j]</code> almacenará el costo mínimo para convertir los primeros <code>i</code> caracteres de <code>s1</code> en los primeros <code>j</code> caracteres de <code>s2</code>.</p>
+            <ul>
+                <li><strong>Inicio:</strong> Celda <code>dp[0][0]</code> (convertir "" en ""), costo 0.</li>
+                <li><strong>Destino:</strong> Celda <code>dp[n][m]</code> (convertir s1 completo en s2 completo).</li>
+                <li><strong>Movimientos:</strong>
+                    <ul>
+                        <li>Moverse hacia abajo equivale a una <strong>eliminación</strong>.</li>
+                        <li>Moverse a la derecha equivale a una <strong>inserción</strong>.</li>
+                        <li>Moverse en diagonal equivale a un <strong>reemplazo</strong> o a una <strong>coincidencia</strong>.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Ejemplo: "horse" → "ros"</h2>
+            <p>Construimos la tabla de DP llenando los casos base (la primera fila son inserciones y la primera columna son eliminaciones) y luego aplicando las reglas de recurrencia.</p>
+            <table class="dp-table">
+    <thead>
+        <tr>
+            <th></th>
+            <th>""</th>
+            <th>r</th>
+            <th>o</th>
+            <th>s</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>""</th>
+            <td>0</td>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <th>h</th>
+            <td>1</td>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+        </tr>
+        <tr>
+            <th>o</th>
+            <td>2</td>
+            <td>2</td>
+            <td>1</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>r</th>
+            <td>3</td>
+            <td>2</td>
+            <td>2</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>s</th>
+            <td>4</td>
+            <td>3</td>
+            <td>3</td>
+            <td>2</td>
+        </tr>
+        <tr>
+            <th>e</th>
+            <td>5</td>
+            <td>4</td>
+            <td>4</td>
+            <td class="final-answer">3</td>
+        </tr>
+    </tbody>
+</table>
+            <p>La respuesta final es el valor en la esquina inferior derecha: <strong>3</strong>.</p>
+        </div>
+
+        <div class="unlinked-card">
+    <h3>Implementación Final en C++</h3>
+    <div>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+        <pre><code class="language-clike">
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+using namespace std;
+
+int EditDistance(string word1, string word2) {
+    int n = word1.length();
+    int m = word2.length();
+
+    // dp[i][j] = costo para convertir los primeros 'i' chars de word1
+    // en los primeros 'j' chars de word2.
+    vector&lt;vector&lt;int&gt;&gt; dp(n + 1, vector&lt;int&gt;(m + 1));
+
+    // Casos base: Llenar la primera fila y columna
+    for (int i = 0; i &lt;= n; ++i) {
+        dp[i][0] = i; // Costo de 'i' eliminaciones
+    }
+    for (int j = 0; j &lt;= m; ++j) {
+        dp[0][j] = j; // Costo de 'j' inserciones
+    }
+
+    // Llenar el resto de la tabla
+    for (int i = 1; i &lt;= n; ++i) {
+        for (int j = 1; j &lt;= m; ++j) {
+            // Se usa i-1 y j-1 porque los strings son 0-indexados
+            if (word1[i - 1] == word2[j - 1]) {
+                // Si los caracteres coinciden, no hay costo adicional
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                // Costo de 1 + el mínimo de las 3 operaciones
+                dp[i][j] = 1 + min({dp[i - 1][j - 1],  // Reemplazar
+                                   dp[i - 1][j],      // Eliminar
+                                   dp[i][j - 1]});    // Insertar
+            }
+        }
+    }
+
+    // La respuesta final está en la esquina inferior derecha
+    return dp[n][m];
+}
+        </code></pre>
+    </div>
+</div>
+
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="30px" class="section-logo">
+                <h1>Ejercicios:</h1>
+            </div>
+            
+            <div class="card-header">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="20px" class="section-logo">
+                <a href="https://leetcode.com/problems/edit-distance/" target="_blank" style="color: aliceblue;">72. Edit Distance (LeetCode)</a>
+            </div>
+            
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="20px" class="section-logo">
+                <a href="https://leetcode.com/problems/minimum-ascii-delete-sum-for-two-strings/" target="_blank" style="color: aliceblue;">712. Minimum ASCII Delete Sum for Two Strings (Variación)</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Zum's CPCFI Page. Todos los derechos reservados.</p>
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const main = document.getElementById("main");
+
+        if (localStorage.getItem("sidebarOpen") === "true") {
+            sidebar.classList.add("active");
+            main.classList.add("active");
+        }
+
+        function toggleSidebar() {
+            sidebar.classList.toggle("active");
+            main.classList.toggle("active");
+            localStorage.setItem("sidebarOpen", sidebar.classList.contains("active"));
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
+    <script>
+      Prism.highlightAll();
+    </script>
+</body>
+</html>
