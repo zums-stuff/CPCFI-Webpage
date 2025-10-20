@@ -247,7 +247,7 @@ cout &lt;&lt s; // "HOLA MUNDO"
 
         <div class="unlinked-card">
             <h2>Strings y Lenguajes Formales</h2>
-            <p>En programación competitiva, muchos problemas de strings son en realidad problemas sobre <strong>Lenguajes Formales</strong>. Un lenguaje es simplemente un <strong>conjunto de strings</strong> que cumplen una regla.</p>
+            <p>En PC, muchos problemas de strings son en realidad problemas de <strong>Lenguajes Formales</strong>. Un lenguaje es simplemente un <strong>conjunto de strings</strong> que cumplen una regla.</p>
             <ul>
                 <li>El "lenguaje de los palíndromos".</li>
                 <li>El "lenguaje de las expresiones aritméticas bien formadas".</li>
@@ -255,33 +255,113 @@ cout &lt;&lt s; // "HOLA MUNDO"
             </ul>
             <p>Los algoritmos avanzados de strings nos ayudan a determinar si una cadena pertenece a un lenguaje o a encontrar patrones dentro de él.</p>
         </div>
-<h1>Conceptos de Lenguajes Formales</h1>
-        
-        
+        <h1>Conceptos de Lenguajes Formales</h1>
+            <div class="unlinked-card">
+                <h2>Alfabeto</h2>
+                Un alfabeto <code>Σ</code> es un conjunto finito de símbolos. Una cadena es una secuencia finita de símbolos de <code>Σ</code>.
+                <h4>Ejemplo:</h4>
+                <table class="dp-table">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <code>Σ = {a, b, . . . , z}</code>
+                            </td>
+                            <td>
+                                ε, a, abc,sol, perro, jasjsjaskajs, . . .
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="unlinked-card">
+                <h2>Lenguaje</h2>
+                Un lenguaje <em><code>L</code></em> es un subconjunto (finito o infinito) de cadenas sobre <code>Σ</code>. Es decir, <code>L ⊆ Σ*</code>
+            
+                <h3>Operaciones en Lenguajes</h3>
+                <p>Sean <code>L₁</code> y <code>L₂</code> dos lenguajes en un alfabeto <code>Σ</code>. Tenemos las siguientes operaciones:</p>
+                <ul>
+                    <li>
+                        <strong>Unión:</strong>
+                        <code>L₁ ∪ L₂ = {w ∈ Σ* | w ∈ L₁ o w ∈ L₂}</code>
+                    </li>
+                    <li>
+                        <strong>Intersección:</strong>
+                        <code>L₁ ∩ L₂ = {w ∈ Σ* | w ∈ L₁ y w ∈ L₂}</code>
+                    </li>
+                    <li>
+                        <strong>Diferencia:</strong>
+                        <code>L₁ - L₂ = {w ∈ Σ* | w ∈ L₁ y w ∉ L₂}</code>
+                    </li>
+                    <li>
+                        <strong>Complemento:</strong>
+                        <code>~L₁ = {w ∈ Σ* | w ∉ L₁}</code>
+                    </li>
+                    <li>
+                        <strong>Concatenación:</strong>
+                        <code>L₁L₂ = {wx | w ∈ L₁ y x ∈ L₂}</code>
+                    </li>
+                    <li>
+                        <strong>Cerradura estrella (Estrella de Kleene):</strong>
+                        <code>L*</code> = Unión de <code>Lⁿ</code> para <code>n ≥ 0</code>, donde:
+                        <ul>
+                            <li><code>L⁰ = {ε}</code> (representa la cadena vacía)</li>
+                            <li><code>Lⁿ⁺¹ = LⁿL</code></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Cerradura positiva (Cerradura cruz):</strong>
+                        <code>L⁺</code> = Unión de <code>Lⁿ</code> para <code>n ≥ 1</code>
+                    </li>
+                </ul>
+
+            </div>
+
         <div class="unlinked-card">
-            <h2>Búsqueda Eficiente de Patrones</h2>
-            <p>El método <code>.find()</code> realiza una búsqueda simple. En programación competitiva, a veces es muy lenta (<code>O(N·M)</code>). Para buscar patrones eficientemente usamos algoritmos basados en la teoría de lenguajes:</p>
-            <ul>
-                <li><strong>Rabin-Karp (Hashing):</strong> Usa <strong>Prefix Zum</strong> pero con hashes. Calcula un hash para el patrón y luego usa un <em>rolling hash</em> para comparar eficientemente todas las subcadenas en <code>O(N+M)</code>.</li>
-                <li><strong>KMP (Knuth-Morris-Pratt):</strong> Un algoritmo basado en autómatas. Precalcula una "función de fallo" (LPS array) que le permite no retroceder en el texto principal, logrando una complejidad de <code>O(N+M)</code>.</li>
-            </ul>
-        </div>
-        
-        <div class="unlinked-card">
-            <h2>Procesamiento por Estados (Autómatas Finitos)</h2>
-            <p>Muchos problemas se pueden modelar como una <em>máquina de estados</em> (autómata). El estado actual (en el que se encuentre) guarda la información que necesitamos para procesar el resto de la cadena.</p>
-            <p><strong>Ejemplo:</strong></p> <p>Sea <code>L</code> el lenguaje definido por los caracteres <code>{1, 0}</code>, ¿la cadena tiene un número par de <code>1</code>'s?</p>
-            <ul>
-                <li>Necesitamos 2 estados: <code>E_PAR</code> (estado inicial) y <code>E_IMPAR</code>.</li>
-                <li>Si leemos un '0', nos quedamos en el mismo estado.</li>
-                <li>Si leemos un '1', cambiamos de estado (<code>E_PAR</code> ↔ <code>E_IMPAR</code>).</li>
-                <li>Si al final estamos en <code>E_PAR</code>, la cadena es aceptada.</li>
-            </ul>
-            <p>Esta es la idea fundamental de muchos problemas de <strong>DP</strong> sobre strings. El estado de la DP (ej. <code>dp[i][estado]</code>) representa la respuesta después de procesar <code>i</code> caracteres y terminar en un <code>estado</code> particular.</p>
+            <h2>Expresiones Regulares (Regex)</h2>
+            <p>Estas expresiones es otro tipo de notación para la definición de lenguajes regulares. También pueden pensarse como una forma de definir <strong>patrones</strong>.</p>
+            <p>Se construye sobre los símbolos: <code>∅</code> (conjunto vacío), <code>ε</code> (cadena vacía), <code>(,)</code> (agrupación), <code>∪</code> [Unión (representa "o")], <code>∗</code> (cerradura estrella) y <code>+</code> (cerradura cruz), además de los símbolos de <code>Σ</code>.</p>
+            <p><h3>Ejemplo:</h3> Definir el lenguaje <code>L</code> que contiene todos los números enteros y decimales (positivos o negativos).</p>
+            <p>En <strong>notación formal de lenguajes</strong>, definimos nuestro alfabeto <code>Σ = {0, 1, 2, 3, ..., 9, -, .}</code> y un lenguaje para los dígitos <code>D = {0, ..., 9}</code>. La expresión regular `R` sería:</p>
+                
+            
+            <table class="dp-table">
+                <thead>
+                    <tr>
+                        <th style="text-align: center;">Expresión Formal</th>
+                        <th style="text-align: left;">Significado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-family: monospace; font-size: 1.1em;">( - ∪ ε )</td>
+                        <td style="text-align: left;">Un guion opcional (<code>-</code> o la cadena vacía <code>ε</code>).</td>
+                    </tr>
+                    <tr>
+                        <td style="font-family: monospace; font-size: 1.1em;">D⁺</td>
+                        <td style="text-align: left;">Uno o más dígitos (la parte entera).</td>
+                    </tr>
+                    <tr>
+                        <td style="font-family: monospace; font-size: 1.1em;">( . D⁺ ∪ ε )</td>
+                        <td style="text-align: left;">Una parte decimal opcional (un punto <code>.</code> seguido de uno o más dígitos).</td>
+                    </tr>
+                </tbody>
+            </table>
+    
+            <p style="text-align: center; font-size: 1.2em; margin-top: 15px;">
+                <strong><code>R = ( - ∪ ε ) D⁺ ( . D⁺ ∪ ε )</code></strong>
+            </p>
+
+            <p>En código PCRE (Perl Compatible Regular Expressions), usaríamos anclas (<code>^</code>, <code>$</code>) y clases de caracteres (<code>\d</code>):</p>
+            <pre><code class="language-clike">"^-?\d+(\.\d+)?$"</code></pre>
         </div>
 
         <div class="unlinked-card">
             <h2>Gramáticas <small><small>(Estructuras Recursivas)</small></small></h2>
+            Las gramáticas son conjuntos de reglas que determinan la formación de las cadenas admisibles en un lenguaje. Una gramática no describe el significado de las cadenas solo su forma.
+            <p>Sea <code><em>G</em></code> una gramática. El lenguaje generado por <code><em>G</em></code> es:</p>
+            <p style="text-align: center; font-size: 1.2em; font-family: 'Times New Roman', serif; color: #e0dccf;">
+        <code><strong>L<sub>G</sub> = {w &isin; &Sigma;<sup>*</sup> | S &rarr;<sup>*</sup><sub>G</sub> w}</strong></code></p>
+            <p>ㅤㅤ</p>
             <p>Algunos lenguajes se definen por reglas recursivas o anidadas. El ejemplo clásico son los paréntesis balanceados.</p>
             <p><strong>Ejemplo:</strong> ¿La cadena está bien formada? (ej. <code>(())()</code>)</p>
             <p>Un string <code>w</code> está bien formado si:</p>
@@ -292,7 +372,48 @@ cout &lt;&lt s; // "HOLA MUNDO"
             </ol>
             <p>Esta definición recursiva se traduce directamente en una solución con <strong>Stacks</strong> o en <strong>DP en Rangos</strong> (<code>dp[i][j]</code> = <em>Validez del substring <code>w[i...j]</code></em>).</p>
         </div>
+
+
+        <div class="unlinked-card">
+            <h2>Autómatas</h2>
+            <p>Informalmente, un autómata es un modelo computacional cuya entrada es una cadena y cuya salida es uno de dos valores: <code>Aceptar</code> o <code>Rechazar</code>.</p>
         
+            <h3>Procesamiento por Estados (Autómatas Finitos)</h3>
+            <p>Muchos problemas se pueden modelar como una <em>máquina de estados</em> (autómata). El estado actual (en el que se encuentre) guarda la información que necesitamos para procesar el resto de la cadena.</p>
+            <p><strong>Ejemplo:</strong></p> <p>Sea <code>L</code> el lenguaje definido por los caracteres <code>{1, 0}</code>, ¿la cadena tiene un número par de <code>1</code>'s?</p>
+            
+            <div class="columns-container">
+
+                <div class="column" style="vertical-align:bottom ;">
+                    <ul>
+                        <li>Necesitamos 2 estados: <code>E_PAR</code> (estado inicial) y <code>E_IMPAR</code>.</li>
+                        <li>Si leemos un '0', nos quedamos en el mismo estado.</li>
+                        <li>Si leemos un '1', cambiamos de estado (<code>E_PAR</code> ↔ <code>E_IMPAR</code>).</li>
+                        <li>Si al final estamos en <code>E_PAR</code>, la cadena es aceptada.</li>
+                    </ul>
+                </div>
+
+                <div class="column" style="text-align: left; align-self: center; vertical-align: top;">
+                    <img src="../../assets/automata par o impar 1.png" 
+                        alt="Autómata finito para número par de 1s" 
+                        style="padding: 10px; max-width: 500px; width: 100%;">
+                </div>
+    
+            </div>
+            
+            <p>Esta es la idea fundamental de muchos problemas de <strong>DP</strong> sobre strings. El estado de la DP (ej. <code>dp[i][estado]</code>) representa la respuesta después de procesar <code>i</code> caracteres y terminar en un <code>estado</code> particular.</p>
+        </div>
+
+        
+        <div class="unlinked-card">
+            <h2>Búsqueda Eficiente de Patrones</h2>
+            <p>El método <code>.find()</code> realiza una búsqueda simple. En programación competitiva, a veces es muy lenta (<code>O(N·M)</code>). Para buscar patrones eficientemente usamos algoritmos basados en la teoría de lenguajes:</p>
+            <ul>
+                <li><strong>Rabin-Karp (Hashing):</strong> Usa <strong>Prefix Zum</strong> pero con hashes. Calcula un hash para el patrón y luego usa un <em>rolling hash</em> para comparar eficientemente todas las subcadenas en <code>O(N+M)</code>.</li>
+                <li><strong>KMP (Knuth-Morris-Pratt):</strong> Un algoritmo basado en autómatas. Precalcula una "función de fallo" (LPS array) que le permite no retroceder en el texto principal, logrando una complejidad de <code>O(N+M)</code>.</li>
+            </ul>
+        </div>
+
         <div class="unlinked-card">
             <div class="card-header">
                 <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="30px" class="section-logo">
