@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Strings y Lenguajes Formales - Zum's CPCFI Page</title>
+    <link rel="icon" type="image/png" href="../../assets/CPCFI.png">
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <script>
+    function copyCode(button) {
+        const codeBlock = button.nextElementSibling.querySelector('code');
+        navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+            button.innerText = "Copiado!";
+            setTimeout(() => button.innerText = "Copiar código", 2000);
+        });
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <img src="../../assets/CPCFI og.png" alt="CPCFI Logo" class="logo">
+
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../index.html">Inicio</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/clases.html">Clases</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/recursos.html">Recursos</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/contacto.html">Contacto</a>
+        </div>
+    </div>
+
+    <div class="main-content" id="main">
+        <div class="card-header">
+            <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="40px" class="section-logo">
+            <h1>Strings + Conceptos de Lenguajes Formales</h1>
+        </div>
+<h1>STD String</h1>
+        <div class="unlinked-card">
+            <p>En C++, las strings son secuencias de caracteres, almacenadas en un vector de caracteres, que se utilizan para almacenar palabras y texto. También se utilizan para almacenar datos, como números y otros tipos de información en forma de texto.</p>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>C-Style vs. C++ Style</h2>
+
+            <div class="columns-container">
+                
+                <div class="column">
+                    <div class="card-header" style="padding-top: 10px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/C_Programming_Language.svg/1853px-C_Programming_Language.svg.png" alt="C Icon" width="30px" class="section-logo">
+                        <h3>C-Style (Arreglo de <code>char</code>)</h3>
+                    </div>
+                    <ul>
+                        <li>En C y C++, se pueden manejar strings como un arreglo de caracteres terminado en <code>\0</code> (carácter nulo).</li>
+                        <li>Se almacena en un array de tipo <code>char[]</code>.</li>
+                        <li>Gestión de memoria manual, propensa a errores.</li>
+                    </ul>
+                    <pre><code class="language-clike">char texto[] = "Hola, mundo";</code></pre>
+                </div>
+
+                <div class="column">
+                    <div class="card-header" style="padding-top: 10px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/ISO_C%2B%2B_Logo.svg/1067px-ISO_C%2B%2B_Logo.svg.png" alt="C++ Icon" width="30px" class="section-logo">
+                        <h3>C++ Style (<code>std::string</code>)</h3>
+                    </div>
+                    <ul>
+                        <li>La librería <code>&lt;string&gt;</code> proporciona la clase <code>std::string</code>.</li>
+                        <li>Maneja la memoria automáticamente (se redimensiona dinámicamente).</li>
+                        <li>Permite usar operadores (<code>+</code>, <code>==</code>, <code>&lt;</code>) y métodos intuitivos para concatenar, comparar y buscar.</li>
+                    </ul>
+                    <pre><code class="language-clike">
+#include &lt;string&gt;
+using namespace std;
+
+string saludo = "Hola, ";
+string nombre = "Mundo";
+string completo = saludo + nombre; // Concatenación
+                    </code></pre>
+                </div>
+
+            </div> 
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Diferencias Clave: <code>char[]</code> vs <code>std::string</code></h2>
+            <table class="dp-table">
+                <thead>
+                    <tr>
+                        <th>char[] (Matriz de Caracteres)</th>
+                        <th>std::string (Clase de Cadena)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Un carácter nulo (<code>\0</code>) finaliza la matriz.</td>
+                        <td>Se representan como objetos, secuencias de cadenas.</td>
+                    </tr>
+                    <tr>
+                        <td>No ofrece funciones integradas; se debe usar <code>&lt;cstring&gt;</code>.</td>
+                        <td>Proporciona numerosas funciones integradas para manipular strings.</td>
+                    </tr>
+                    <tr>
+                        <td>El tamaño debe asignarse de forma estática.</td>
+                        <td>La memoria se asigna dinámicamente.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Funciones y Operaciones Comunes con Strings</h2>
+            <p>Aquí hay un resumen de las funciones y operadores más utilizados para manipular <code>std::string</code>. Los ejemplos de código para algunos de estos grupos se encuentran debajo.</p>
+
+            <div class="columns-container">
+
+                <div class="column">
+                    <table class="dp-table">
+                        <thead>
+                            <tr>
+                                <th>Función / Operación</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>s[i]</code></td>
+                                <td>Accede al carácter en la posición <code>i</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>.length()</code> / <code>.size()</code></td>
+                                <td>Devuelven la longitud de la cadena.</td>
+                            </tr>
+                            <tr>
+                                <td><code>.push_back(char c)</code></td>
+                                <td>Inserta un carácter al final.</td>
+                            </tr>
+                            <tr>
+                                <td><code>.pop_back()</code></td>
+                                <td>Elimina el último carácter.</td>
+                            </tr>
+                            <tr>
+                                <td><code>.clear()</code></td>
+                                <td>Vacía la cadena (longitud 0).</td>
+                            </tr>
+                            <tr>
+                                <td><code>.insert(pos, sub)</code></td>
+                                <td>Inserta <code>sub</code> en la posición <code>pos</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>.erase(pos, len)</code></td>
+                                <td>Elimina <code>len</code> caracteres desde <code>pos</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>.swap(s2)</code></td>
+                                <td>Intercambia el contenido de dos strings.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> <div class="column">
+                    <table class="dp-table">
+                        <thead>
+                            <tr>
+                                <th>Función / Operación</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>.find(sub)</code></td>
+                                <td>Busca <code>sub</code> y devuelve el índice (o <code>string::npos</code>).</td>
+                            </tr>
+                            <tr>
+                                <td><code>.substr(pos, len)</code></td>
+                                <td>Devuelve una subcadena desde <code>pos</code> con longitud <code>len</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>stoi(s)</code></td>
+                                <td>Convierte la string <code>s</code> a un <code>int</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>stoll(s)</code></td>
+                                <td>Convierte la string <code>s</code> a un <code>long long</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>to_string(n)</code></td>
+                                <td>Convierte el número <code>n</code> a una <code>string</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code></td>
+                                <td>Comparación lexicográfica.</td>
+                            </tr>
+                            <tr>
+                                <td><code>reverse(s.begin(), s.end())</code></td>
+                                <td>Invierte la string.</td>
+                            </tr>
+                            <tr>
+                                <td><code>count(s.begin(), s.end(), c)</code></td>
+                                <td>Cuenta las apariciones de <code>c</code>.</td>
+                            </tr>
+                            <tr>
+                                <td><code>transform(...)</code></td>
+                                <td>Aplica una operación a cada carácter.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> </div><h3 style="margin-top: 25px;">Ejemplos de Código</h3>
+            
+            <p><strong>Acceso y Tamaño:</strong></p>
+            <pre><code class="language-clike">string s = "CPCFI";
+cout &lt;&lt; s[0]; // 'C'
+cout &lt;&lt; s.length(); // 5
+            </code></pre>
+
+            <p><strong>Comparación:</strong></p>
+            <pre><code class="language-clike">string a = "apple";
+string b = "apply";
+if (a < b) {
+    // "apple" es menor que "apply"
+}</code></pre>
+
+            <p><strong>Utilidades (Transformar a Mayúsculas):</strong></p>
+            <pre><code class="language-clike">#include &lt;algorithm&gt;
+#include &lt;cctype&gt;
+
+string s = "Hola Mundo";
+
+transform(s.begin(), s.end(), s.begin(), ::toupper); //Parámetros: (Input start, Input end, Output start, operation)
+
+cout &lt;&lt s; // "HOLA MUNDO"
+            </code></pre>
+        </div>
+
+
+        <div class="unlinked-card">
+            <h2>Strings y Lenguajes Formales</h2>
+            <p>En programación competitiva, muchos problemas de strings son en realidad problemas sobre <strong>Lenguajes Formales</strong>. Un lenguaje es simplemente un <strong>conjunto de strings</strong> que cumplen una regla.</p>
+            <ul>
+                <li>El "lenguaje de los palíndromos".</li>
+                <li>El "lenguaje de las expresiones aritméticas bien formadas".</li>
+                <li>El "lenguaje de las cadenas con número par de 1s".</li>
+            </ul>
+            <p>Los algoritmos avanzados de strings nos ayudan a determinar si una cadena pertenece a un lenguaje o a encontrar patrones dentro de él.</p>
+        </div>
+<h1>Conceptos de Lenguajes Formales</h1>
+        
+        
+        <div class="unlinked-card">
+            <h2>Búsqueda Eficiente de Patrones</h2>
+            <p>El método <code>.find()</code> realiza una búsqueda simple. En programación competitiva, a veces es muy lenta (<code>O(N·M)</code>). Para buscar patrones eficientemente usamos algoritmos basados en la teoría de lenguajes:</p>
+            <ul>
+                <li><strong>Rabin-Karp (Hashing):</strong> Usa <strong>Prefix Zum</strong> pero con hashes. Calcula un hash para el patrón y luego usa un <em>rolling hash</em> para comparar eficientemente todas las subcadenas en <code>O(N+M)</code>.</li>
+                <li><strong>KMP (Knuth-Morris-Pratt):</strong> Un algoritmo basado en autómatas. Precalcula una "función de fallo" (LPS array) que le permite no retroceder en el texto principal, logrando una complejidad de <code>O(N+M)</code>.</li>
+            </ul>
+        </div>
+        
+        <div class="unlinked-card">
+            <h2>Procesamiento por Estados (Autómatas Finitos)</h2>
+            <p>Muchos problemas se pueden modelar como una <em>máquina de estados</em> (autómata). El estado actual (en el que se encuentre) guarda la información que necesitamos para procesar el resto de la cadena.</p>
+            <p><strong>Ejemplo:</strong></p> <p>Sea <code>L</code> el lenguaje definido por los caracteres <code>{1, 0}</code>, ¿la cadena tiene un número par de <code>1</code>'s?</p>
+            <ul>
+                <li>Necesitamos 2 estados: <code>E_PAR</code> (estado inicial) y <code>E_IMPAR</code>.</li>
+                <li>Si leemos un '0', nos quedamos en el mismo estado.</li>
+                <li>Si leemos un '1', cambiamos de estado (<code>E_PAR</code> ↔ <code>E_IMPAR</code>).</li>
+                <li>Si al final estamos en <code>E_PAR</code>, la cadena es aceptada.</li>
+            </ul>
+            <p>Esta es la idea fundamental de muchos problemas de <strong>DP</strong> sobre strings. El estado de la DP (ej. <code>dp[i][estado]</code>) representa la respuesta después de procesar <code>i</code> caracteres y terminar en un <code>estado</code> particular.</p>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Gramáticas <small><small>(Estructuras Recursivas)</small></small></h2>
+            <p>Algunos lenguajes se definen por reglas recursivas o anidadas. El ejemplo clásico son los paréntesis balanceados.</p>
+            <p><strong>Ejemplo:</strong> ¿La cadena está bien formada? (ej. <code>(())()</code>)</p>
+            <p>Un string <code>w</code> está bien formado si:</p>
+            <ol>
+                <li><code>w</code> es la cadena vacía.</li>
+                <li><code>w</code> tiene la forma <code>(A)</code>, donde <code>A</code> está bien formado.</li>
+                <li><code>w</code> tiene la forma <code>AB</code>, donde <code>A</code> y <code>B</code> están bien formados.</li>
+            </ol>
+            <p>Esta definición recursiva se traduce directamente en una solución con <strong>Stacks</strong> o en <strong>DP en Rangos</strong> (<code>dp[i][j]</code> = <em>Validez del substring <code>w[i...j]</code></em>).</p>
+        </div>
+        
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="30px" class="section-logo">
+                <h1>Ejercicios:</h1>
+            </div>
+
+            <div class = "card-header" style="margin-top: 15px;">
+                <img src="../../assets/codeforces.png" alt="Codeforces logo" width="20px" class="section-logo">
+                <a href="https://codeforces.com/problemset/problem/1985/A" target="_blank" style="color: aliceblue;">1985 - A. Creating Words </a>
+            </div>
+
+            <div class = "card-header" style="margin-top: 15px;">
+                <img src="../../assets/codeforces.png" alt="Codeforces logo" width="20px" class="section-logo">
+                <a href="https://codeforces.com/problemset/problem/1971/D" target="_blank" style="color: aliceblue;">1971 - D. Binary Cut </a>
+            </div>
+
+            <div class = "card-header" style="margin-top: 15px;">
+                <img src="../../assets/codeforces.png" alt="Codeforces logo" width="20px" class="section-logo">
+                <a href="https://codeforces.com/problemset/problem/1941/C" target="_blank" style="color: aliceblue;">1941 - C. Rudolf and the Ugly String</a>
+            </div>
+
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/codeforces.png" alt="Codeforces logo" width="20px" class="section-logo">
+                <a href="https://codeforces.com/problemset/problem/1008/A" target="_blank" style="color: aliceblue;">1008 - A. Romaji</a>
+            </div>
+
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="20px" class="section-logo">
+                <a href="https://leetcode.com/problems/reverse-words-in-a-string/" target="_blank" style="color: aliceblue;">151. Reverse Words in a String (Manipulación)</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Zum's CPCFI Page. Todos los derechos reservados.</p>
+        </div>
+        
+    </div> <script>
+        const sidebar = document.getElementById("sidebar");
+        const main = document.getElementById("main");
+
+        if (localStorage.getItem("sidebarOpen") === "true") {
+            sidebar.classList.add("active");
+            main.classList.add("active");
+        }
+
+        function toggleSidebar() {
+            sidebar.classList.toggle("active");
+            main.classList.toggle("active");
+            localStorage.setItem("sidebarOpen", sidebar.classList.contains("active"));
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
+    <script>
+      Prism.highlightAll();
+    </script>
+</body>
+</html>

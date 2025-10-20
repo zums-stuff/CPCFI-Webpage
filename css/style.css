@@ -168,9 +168,9 @@ pre {
 :not(pre) > code {
     background-color: #3a3a3c; /* Un fondo gris oscuro, ligeramente más claro que las tarjetas */
     color: #e0dccf;
-    padding: 3px 6px;
+    padding: 1px 6px;
     border-radius: 5px;
-    font-size: 1.3em; /* Ajusta este valor si lo quieres más grande o pequeño */
+    font-size: 1.2em; /* Ajusta este valor si lo quieres más grande o pequeño */
 }
 
 
@@ -197,4 +197,18 @@ pre {
     background-color: #2e2d37;
     color: #7A7291;
     font-weight: bold;
+}
+
+/* --- Estilos para las columnas (ej. C-Style vs C++) --- */
+.columns-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas de igual tamaño */
+    gap: 20px; /* Espacio entre las columnas */
+}
+
+/* En pantallas pequeñas (móviles), apila las columnas en lugar de ponerlas una al lado de la otra */
+@media (max-width: 768px) {
+    .columns-container {
+        grid-template-columns: 1fr; /* Una sola columna */
+    }
 }
