@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Floyd-Warshall - Zum's CPCFI Page</title>
+    <link rel="icon" type="image/png" href="../../assets/CPCFI.png">
+    <link rel="stylesheet" href="../../css/style.css">
+
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+
+    <script>
+    function copyCode(button) {
+        const codeBlock = button.nextElementSibling.querySelector('code');
+        navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+            button.innerText = "Copiado!";
+            setTimeout(() => button.innerText = "Copiar código", 2000);
+        });
+    }
+    </script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button class="toggle-btn" onclick="toggleSidebar()">☰</button>
+    <img src="../../assets/CPCFI og.png" alt="CPCFI Logo" class="logo">
+
+    <div class="sidebar" id="sidebar">
+        <h2>Menu</h2>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../index.html">Inicio</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/clases.html">Clases</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/recursos.html">Recursos</a>
+        </div>
+        <div class="card-header">
+            <img src="../../assets/Globo.png" style="width: 15px; height:30px" alt="CPCFI Logo" class="sidebar-logo">
+            <a href="../../pages/contacto.html">Contacto</a>
+        </div>
+    </div>
+
+    <div class="main-content" id="main">
+        <div class="card-header">
+            <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="40px" class="section-logo">
+            <h1>Algoritmo de Floyd-Warshall</h1>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>¿Qué es el Algoritmo de Floyd-Warshall?</h2>
+            <p>Es un algoritmo de programación dinámica que encuentra el <strong>camino más corto entre todos los pares de nodos</strong> en una gráfica (All-Pairs Shortest Path).</p>
+            <ul>
+                <li>Funciona en gráficas <strong>dirigidas y no dirigidas</strong>.</li>
+                <li>Maneja aristas con pesos <strong>positivos y negativos</strong>.</li>
+                <li>Su única limitación es que la gráfica <strong>no puede tener ciclos negativos</strong> (un ciclo cuya suma de pesos sea menor que 0).</li>
+            </ul>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>La Idea Central: El Vértice Intermedio</h2>
+            <p>El algoritmo funciona iterativamente, tratando a cada vértice <code>k</code> (de 0 a V-1) como un posible <strong>nodo intermedio</strong> en el camino de <code>i</code> a <code>j</code>.</p>
+            <p>La pregunta clave que se hace es: "Para ir de <code>i</code> a <code>j</code>, ¿es más corto ir directo, o es más corto pasar por <code>k</code>?"</p>
+            
+            <div class="columns-container">
+                <div class="column" style="text-align: right; align-self: center; ">
+                    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20250415120913367942/5.webp" 
+                        alt="Diagrama de Floyd-Warshall 1" 
+                        style="padding: 10px; width: 300px; filter: invert(1);">
+                </div>
+                
+                <div class="column" style="text-align: left; align-self: center;">
+                    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20250415120616928627/1.webp" 
+                        alt="Diagrama de Floyd-Warshall 2" 
+                        style="padding: 10px; width: 250px; filter: invert(1);">
+                </div>
+            </div>
+
+            <p>Esto se traduce en la siguiente línea de código, que es el corazón del algoritmo:</p>
+            <pre><code class="language-clike">// ¿Es el camino actual de i a j
+// más largo que el camino de i a k + el camino de k a j?
+dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+            </code></pre>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Definición Formal de la DP</h2>
+            <p>Aunque la implementación no lo parezca, Floyd-Warshall es un DP puro. El estado real de la DP se define así:</p>
+            <p><code>dp[k][i][j]</code> = "La distancia más corta desde el nodo <code>i</code> hasta el nodo <code>j</code>, usando solamente vértices intermedios del conjunto <code>{0, 1, ..., k}</code>."</p>
+            <p>La transición es:</p>
+            <code>dp[k][i][j] = min( dp[k-1][i][j], dp[k-1][i][k] + dp[k-1][k][j] )</code>
+            <ul>
+                <li><code>dp[k-1][i][j]</code>: El camino más corto sin usar <code>k</code>.</li>
+                <li><code>dp[k-1][i][k] + dp[k-1][k][j]</code>: El camino más corto usando <code>k</code>.</li>
+            </ul>
+            <p>Como <code>dp[k]</code> solo depende de <code>dp[k-1]</code>, podemos optimizar el espacio y eliminar la primera dimensión (<code>k</code>), quedando solo la matriz <code>dist[i][j]</code> que se actualiza en el lugar. El orden de los bucles es <strong>crucial</strong>: el bucle de <code>k</code> <strong>debe</strong> ser el más externo.</p>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Inicialización de la Matriz</h2>
+            <p>Para que el algoritmo funcione, la matriz de distancias <code>dist[n][n]</code> debe inicializarse correctamente:</p>
+            <ul>
+                <li><code>dist[i][j] = INF</code> (un valor muy grande) si no hay una arista directa de <code>i</code> a <code>j</code>.</li>
+                <li><code>dist[i][i] = 0</code> para toda la diagonal (la distancia de un nodo a sí mismo es 0).</li>
+                <li><code>dist[i][j] = w</code> si hay una arista directa de <code>i</code> a <code>j</code> con ese peso.</li>
+            </ul>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Implementación en C++</h2>
+            <p><strong>Nota:</strong> Esta implementación es para una <strong>gráfica dirigida</strong>.
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+#include&lt;bits/stdc++.h&gt;
+using namespace std;
+
+const long long INF = 1e18;
+
+int main(){
+    int n, m, q;
+    cin >> n >> m >> q; // n=vértices, m=aristas, q=consultas
+
+    // Inicializa la matriz con INF
+    vector&lt;vector&lt;long long&gt;&gt; dist(n, vector&lt;long long&gt;(n, INF));
+
+    // La distancia a uno mismo es 0
+    for (int i = 0; i < n; i++) {
+        dist[i][i] = 0;
+    }
+    
+    // Lee las aristas
+    for(int i = 0; i < m; i++){
+        int a, b;
+        long long c;
+        cin >> a >> b >> c;
+        a--; b--; // Convertir a 0-indexado
+        
+        // Asigna el peso de la arista dirigida
+        // Se usa min por si hay aristas paralelas (múltiples aristas entre a y b)
+        dist[a][b] = min(dist[a][b], c);
+    }
+
+    // El corazón del algoritmo de Floyd-Warshall
+    for(int k = 0; k < n; k++){ // Vértice intermedio
+        for(int i = 0; i < n; i++){ // Nodo de inicio
+            for(int j = 0; j < n; j++){ // Nodo final
+                
+                // Chequeo para evitar overflow con INF
+                if(dist[i][k] < INF && dist[k][j] < INF) {
+                    dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+                }
+            }
+        }
+    }
+
+    // Responde las consultas
+    while(q--){
+        int a, b; cin >> a >> b;
+        a--; b--;
+        if(dist[a][b] == INF) // Importante checar con == INF
+            cout << -1 << "\n";
+        else 
+            cout << dist[a][b] << "\n";
+    }
+}
+                </code></pre>
+            </div>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Complejidad y Casos de Uso</h2>
+            <p>La complejidad temporal es siempre <strong><code>O(V³)</code></strong>, debido a los tres bucles anidados.</p>
+
+        <p>Esta complejidad no depende del número de aristas (<code>M</code>).
+        Por esto, Floyd-Warshall es ideal para <strong>gráficas densas</strong> (donde <code>M</code> es cercano a <code>V²</code>).</p>
+        En <strong>gráficas ralas</strong> (donde <code>M</code> es cercano a <code>V</code>), es más eficiente ejecutar <code>V</code> veces el algoritmo de Dijkstra (<code>O(V * (E log V))</code>).
+
+        </div>
+        
+        <div class="unlinked-card">
+            <h2>Aplicaciones Adicionales</h2>
+            
+            <h3>Detección de Ciclos Negativos</h3>
+            <p>Floyd-Warshall puede detectar si existe un ciclo negativo en la gráfica.</p>
+            <p>Después de que el algoritmo ha terminado, simplemente revisa la diagonal de la matriz. Si para cualquier vértice <code>i</code>, el valor de <code>dist[i][i]</code> es <strong>menor que 0</strong>, significa que existe un camino desde <code>i</code> de regreso a <code>i</code> con costo negativo, es decir, un ciclo negativo.</p>
+
+            <h3>Reconstrucción de Caminos</h3>
+            <p>Para reconstruir el camino más corto (no solo la distancia), se usa una matriz auxiliar <code>next[i][j]</code>.</p>
+            <ul>
+                <li><strong>Inicialización:</strong> Si hay una arista <code>i -> j</code>, <code>next[i][j] = j</code>.</li>
+                <li><strong>Actualización:</strong> Cuando relajas la arista <code>(i, j)</code> usando <code>k</code>, actualizas el camino:
+                    <pre><code class="language-clike">
+if (dist[i][k] + dist[k][j] < dist[i][j]) {
+    dist[i][j] = dist[i][k] + dist[k][j];
+    next[i][j] = next[i][k]; // El camino de i a j ahora va por k
+}
+                    </code></pre>
+                </li>
+            </ul>
+        </div>
+
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="30px" class="section-logo">
+                <h1>Ejercicios:</h1>
+            </div>
+            
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="40px" class="section-logo">
+                <a href="https://leetcode.com/problems/find-the-city-with-the-smallest-number-of-neighbors-at-a-threshold-distance/" target="_blank" style="color: aliceblue;">1334. Find the City With the Smallest Number of Neighbors at a Threshold Distance</a>
+            </div>
+            
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="https://cses.fi/logo.png?1" alt="CSES Logo" width="50px" class="section-logo">
+                <a href="https://cses.fi/problemset/task/1672" target="_blank" style="color: aliceblue;">CSES - Shortest Routes II</a>
+            </div>
+
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="https://cses.fi/logo.png?1" alt="CSES Logo" width="50px" class="section-logo">
+                <a href="https://cses.fi/problemset/task/1673" target="_blank" style="color: aliceblue;">CSES - High Score</a>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 Zum's CPCFI Page. Todos los derechos reservados.</p>
+        </div>
+    </div>
+
+    <script>
+        const sidebar = document.getElementById("sidebar");
+        const main = document.getElementById("main");
+
+        if (localStorage.getItem("sidebarOpen") === "true") {
+            sidebar.classList.add("active");
+            main.classList.add("active");
+        }
+
+        function toggleSidebar() {
+            sidebar.classList.toggle("active");
+            main.classList.toggle("active");
+            localStorage.setItem("sidebarOpen", sidebar.classList.contains("active"));
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-clike.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
+    <script>
+      Prism.highlightAll();
+    </script>
+</body>
+</html>
