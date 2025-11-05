@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Floyd-Warshall - Zum's CPCFI Page</title>
+    <title>Floyd-Warshall y Bellman-Ford - Zum's CPCFI Page</title>
     <link rel="icon" type="image/png" href="../../assets/CPCFI.png">
     <link rel="stylesheet" href="../../css/style.css">
 
@@ -68,14 +68,14 @@
             <div class="columns-container">
                 <div class="column" style="text-align: right; align-self: center; ">
                     <img src="https://media.geeksforgeeks.org/wp-content/uploads/20250415120913367942/5.webp" 
-                        alt="Diagrama de Floyd-Warshall 1" 
-                        style="padding: 10px; width: 300px; filter: invert(1);">
+                         alt="Diagrama de Floyd-Warshall 1" 
+                         style="padding: 10px; width: 300px; filter: invert(1);">
                 </div>
                 
                 <div class="column" style="text-align: left; align-self: center;">
                     <img src="https://media.geeksforgeeks.org/wp-content/uploads/20250415120616928627/1.webp" 
-                        alt="Diagrama de Floyd-Warshall 2" 
-                        style="padding: 10px; width: 250px; filter: invert(1);">
+                         alt="Diagrama de Floyd-Warshall 2" 
+                         style="padding: 10px; width: 250px; filter: invert(1);">
                 </div>
             </div>
 
@@ -126,7 +126,7 @@ int main(){
 
     // Inicializa la matriz con INF
     vector&lt;vector&lt;long long&gt;&gt; dist(n, vector&lt;long long&gt;(n, INF));
-
+    
     // La distancia a uno mismo es 0
     for (int i = 0; i < n; i++) {
         dist[i][i] = 0;
@@ -219,9 +219,149 @@ if (dist[i][k] + dist[k][j] < dist[i][j]) {
                 <a href="https://cses.fi/problemset/task/1672" target="_blank" style="color: aliceblue;">CSES - Shortest Routes II</a>
             </div>
 
+        </div>
+        
+        <hr>
+
+        <div class="card-header" style="margin-top: 30px;">
+            <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="40px" class="section-logo">
+            <h1>Algoritmo de Bellman-Ford</h1>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>¿Qué es el Algoritmo de Bellman-Ford?</h2>
+            <p>Es un algoritmo que calcula el camino más corto desde un <strong>único nodo fuente</strong> a todos los demás nodos en la gráfica (Single-Source Shortest Path).</p>
+            <ul>
+                <li>Su principal ventaja sobre Dijkstra es que <strong>funciona correctamente con aristas de peso negativo</strong>.</li>
+                <li>Su principal aplicación es <strong>detectar ciclos negativos</strong>.</li>
+                <li>Es más lento que Dijkstra, con una complejidad de <strong><code>O(V·E)</code></strong> (donde <code>V</code> es el número de vértices y <code>E</code> el de aristas).</li>
+            </ul>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>La Idea Central: Relajación Iterativa</h2>
+            <p>La idea de Bellman-Ford es simple: "relaja" todas las aristas de la gráfica una y otra vez.</p>
+            <p><strong>Relajación:</strong> Es el mismo proceso que en Floyd-Warshall. Para una arista <code>(u, v)</code> con peso <code>w</code>, comprueba:</p>
+            <pre><code class="language-clike">// ¿Es el camino actual a 'v' más largo que
+// el camino a 'u' + el costo de ir de 'u' a 'v'?
+if (dist[u] + w < dist[v]) {
+    dist[v] = dist[u] + w;
+}
+            </code></pre>
+            <p>El algoritmo repite este proceso para **todas las aristas** un total de <strong><code>V-1</code></strong> veces.</p>
+            <ul>
+                <li>Un camino más corto en una gráfica sin ciclos puede tener como máximo <code>V-1</code> aristas.</li>
+                <li>En la primera iteración, encuentra todos los caminos más cortos de longitud 1.</li>
+                <li>En la segunda iteración, encuentra todos los caminos más cortos de longitud 2 (usando los resultados de la primera).</li>
+                <li>...</li>
+                <li>Después de <code>V-1</code> iteraciones, ha encontrado todos los caminos más cortos posibles.</li>
+            </ul>
+        </div>
+        
+        <div class="unlinked-card">
+            <h2>Implementación en C++</h2>
+            <p>Bellman-Ford generalmente se implementa sobre una <strong>lista de aristas</strong>, ya que es lo más fácil para iterar sobre todas ellas.</p>
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+#include&lt;bits/stdc++.h&gt;
+using namespace std;
+
+const long long INF = 1e18;
+
+// Es más limpio usar una struct para la lista de aristas
+struct Edge {
+    int a, b;
+    long long cost;
+};
+
+int main(){
+    int n, m;
+    cin >> n >> m; // n=vértices, m=aristas
+
+    vector&lt;Edge&gt; edges;
+    for(int i = 0; i < m; i++){
+        int a, b;
+        long long c;
+        cin >> a >> b >> c;
+        a--; b--; // 0-indexado
+        edges.push_back({a, b, c});
+    }
+
+    int source_node = 0; // Nodo fuente
+    vector&lt;long long&gt; dist(n, INF);
+    dist[source_node] = 0;
+
+    // Bucle principal de Bellman-Ford: V-1 iteraciones
+    for(int i = 0; i < n - 1; ++i) {
+        // Iterar sobre TODAS las aristas
+        for (const auto& e : edges) {
+            if (dist[e.a] != INF) { // Si el nodo 'a' es alcanzable
+                dist[e.b] = min(dist[e.b], dist[e.a] + e.cost);
+            }
+        }
+    }
+    
+    // (Aquí iría la detección de ciclo negativo)
+    
+    // Imprimir distancias desde el nodo 0
+    for(int i = 0; i < n; ++i) {
+        if(dist[i] == INF) {
+            cout << "INF ";
+        } else {
+            cout << dist[i] << " ";
+        }
+    }
+    cout << endl;
+}
+                </code></pre>
+            </div>
+        </div>
+
+        <div class="unlinked-card">
+            <h2>Detección de Ciclos Negativos</h2>
+            <p>La característica más poderosa de Bellman-Ford es cómo detecta ciclos negativos.</p>
+            <p>La lógica es simple: si después de las <code>V-1</code> iteraciones (que garantizan el camino más corto si no hay ciclos negativos), realizamos <strong>una iteración más (la V-ésima)</strong> y alguna distancia *todavía* se puede mejorar, es porque esa arista es parte de un ciclo negativo.</p>
+            
+            <h3>Código de Detección</h3>
+            <p>Se añade este bucle <strong>después</strong> del bucle principal de <code>V-1</code> iteraciones:</p>
+            <div>
+                <button class="copy-btn" onclick="copyCode(this)">Copiar código</button>
+                <pre><code class="language-clike">
+bool negCycle = false;
+for (const auto& e : edges) {
+    if (dist[e.a] != INF && dist[e.a] + e.cost < dist[e.b]) {
+        negCycle = true;
+        break;
+    }
+}
+
+if (has_negative_cycle){ //Hay ciclo negativo
+    //...
+}
+                </code></pre>
+            </div>
+        </div>
+
+        <div class="unlinked-card">
+            <div class="card-header">
+                <img src="../../assets/CPCFI.png" alt="CPCFI Logo" width="30px" class="section-logo">
+                <h1>Ejercicios (Bellman-Ford):</h1>
+            </div>
+            
             <div class="card-header" style="margin-top: 15px;">
                 <img src="https://cses.fi/logo.png?1" alt="CSES Logo" width="50px" class="section-logo">
                 <a href="https://cses.fi/problemset/task/1673" target="_blank" style="color: aliceblue;">CSES - High Score</a>
+            </div>
+
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="https://cses.fi/logo.png?1" alt="CSES Logo" width="50px" class="section-logo">
+                <a href="https://cses.fi/problemset/task/1197" target="_blank" style="color: aliceblue;">CSES - Cycle Finding</a>
+            </div>
+
+            <div class="card-header" style="margin-top: 15px;">
+                <img src="../../assets/LeetCode_logo_black.png" alt="Leetcode Logo" width="40px" class="section-logo">
+                <a href="https://leetcode.com/problems/cheapest-flights-within-k-stops/" target="_blank" style="color: aliceblue;">787. Cheapest Flights Within K Stops (Variación de Bellman-Ford)</a>
             </div>
         </div>
 
