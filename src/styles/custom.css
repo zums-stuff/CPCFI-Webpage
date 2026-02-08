@@ -1,0 +1,63 @@
+/* src/styles/custom.css */
+
+:root {
+  font-size: 14px; 
+
+  /* =========================================
+     BASE: GEMINI DARK (Gris Mate)
+     ACENTO: CPCFI ORANGE
+     ========================================= */
+
+  /* --- 1. FONDOS (La base gris que te gustó) --- */
+  --sl-color-bg: #131314;           /* Gris Google Dark */
+  --sl-color-bg-nav: #131314;       /* Navegación integrada */
+  --sl-color-bg-sidebar: #0E0E0E;   /* Barra lateral casi negra */
+  --sl-color-bg-inline-code: #1E1F20; /* Bloques de código */
+
+  /* --- 2. SUPERFICIES (Tarjetas) --- */
+  --sl-color-gray-6: #1E1F20;       /* Gris elevado */
+
+  /* --- 3. TEXTOS --- */
+  --sl-color-text: #E3E3E3;         /* Gris perla para leer */
+  --sl-color-heading: #FFFFFF;      /* Blanco puro */
+  
+  /* --- 4. ACENTO (AQUÍ ESTÁ EL CAMBIO A NARANJA) --- */
+  /* Color directo para enlaces y textos destacados */
+  --sl-color-text-accent: #FCA311;  
+  
+  /* Configuración HSL para que Starlight calcule los fondos de 
+     la barra lateral seleccionada y los anillos de enfoque */
+  --sl-hue-orange: 37;              /* Tono Naranja Dorado */
+  --sl-hue-accent: var(--sl-hue-orange);
+  --sl-saturation-accent: 100%;
+  --sl-lightness-accent: 60%;       /* Brillante para que resalte en oscuro */
+
+  /* --- 5. BORDES --- */
+  --sl-color-hairline: #444746;     /* Gris medio sutil */
+}
+
+/* --- AJUSTES FINOS --- */
+
+/* Tarjetas estilo Material Design */
+.card {
+    background-color: #1E1F20 !important;
+    border: 1px solid #444746 !important;
+    border-radius: 12px;
+}
+
+/* Scrollbar gris con "pulgar" naranja al tocar */
+::-webkit-scrollbar {
+  width: 10px;
+  background: #131314;
+}
+::-webkit-scrollbar-thumb {
+  background: #444746;
+  border-radius: 5px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #FCA311; /* Naranja al interactuar */
+}
+
+/* Utilerías */
+.content-panel { max-width: 100% !important; }
+[data-theme='dark'] .invert-dark { filter: invert(1) hue-rotate(180deg); }
