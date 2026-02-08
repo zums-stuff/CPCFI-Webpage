@@ -1,40 +1,99 @@
 ---
-title: Welcome to Starlight
-description: Get started building your docs site with Starlight.
-template: splash # Remove or comment out this line to display the site sidebar on this page.
+title: Inicio
+description: Club de Programación Competitiva de la Facultad de Ingeniería
+template: splash
 hero:
-  tagline: Congrats on setting up a new Starlight project!
-  image:
-    file: ../../assets/houston.webp
-  actions:
-    - text: Example Guide
-      link: /guides/example/
-      icon: right-arrow
-    - text: Read the Starlight docs
-      link: https://starlight.astro.build
-      icon: external
-      variant: minimal
+  title: "" 
+  tagline: ""
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
+import globosImg from '../../assets/CPCFI.png'; 
 
-## Next steps
+<div class="custom-hero">
+  <div class="logo-container">
+    <img src={globosImg.src} alt="CPCFI Globos" class="hero-balloons" />
+  </div>
+  <h1 class="gradient-title">
+    Club de Programación Competitiva <br/> de la Facultad de Ingeniería
+  </h1>
+</div>
+
+<style>{`
+  /* --- ESTILOS DE LA PORTADA --- */
+  .custom-hero {
+    /* Fondo: Gradiente de Negro a Gris Tema */
+    background: linear-gradient(180deg, #000000 0%, #131314 100%);
+        margin-top: -18rem !important;
+    
+    /* Espaciado interno */
+    padding-top: 3rem; 
+    padding-bottom: 3rem;
+    
+    /* Full Width Hack */
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    
+    /* Alineación */
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem; 
+    
+    z-index: 1;
+  }
+
+  .hero-balloons {
+    padding-top: 5rem;
+    width: 180px; 
+    height: auto;
+    filter: drop-shadow(0 0 30px rgba(252, 163, 17, 0.2));
+    transition: transform 0.3s ease;
+    margin: 0; 
+    display: block;
+  }
+
+  /* Título */
+  .gradient-title {
+    font-family: system-ui, -apple-system, sans-serif;
+    font-weight: 500;
+    font-size: 2.5rem !important;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+    margin-top: 0 !important; 
+    
+    background: linear-gradient(180deg, #FFFFFF 30%, #FCA311 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @media (max-width: 768px) {
+    .gradient-title { font-size: 1.5rem !important; }
+    .custom-hero { margin-top: -1rem !important; } 
+  }
+`}</style>
+
+<div style="text-align: center; margin-bottom: 2rem; color: #E3E3E3;">
+  <h3>¡Bienvenid@!</h3>
+</div>
 
 <CardGrid stagger>
-	<Card title="Update content" icon="pencil">
-		Edit `src/content/docs/index.mdx` to see this page change.
-	</Card>
-	<Card title="Change page layout" icon="document">
-		Delete `template: splash` in `src/content/docs/index.mdx` to display a
-		sidebar on this page.
-	</Card>
-	<Card title="Add new content" icon="add-document">
-		Add Markdown or MDX files to `src/content/docs` to create new pages.
-	</Card>
-	<Card title="Configure your site" icon="setting">
-		Edit your `sidebar` and other config in `astro.config.mjs`.
-	</Card>
-	<Card title="Read the docs" icon="open-book">
-		Learn more in [the Starlight Docs](https://starlight.astro.build/).
-	</Card>
+  <Card title="Últimas Clases" icon="document">
+    Repasa los temas de **Grafos**, **Programación Dinámica** y **Strings**.
+    <br/> <a href="/welcome/bienvenida" style="color: #FCA311; text-decoration: none;">Explorar &rarr;</a>
+  </Card>
+  <Card title="Recursos Útiles" icon="laptop">
+    Libros, jueces en línea y plantillas de código. (no sirve todavia xd)
+    <br/> <a href="/recursos/" style="color: #FCA311; text-decoration: none;">Ver Librería &rarr;</a>
+  </Card>
+  <Card title="Comunidad" icon="discord">
+    Únete al servidor y conecta con otros desarrolladores. (tampoco sirve xd)
+    <br/> <a href="/contacto/" style="color: #FCA311; text-decoration: none;">Conectar &rarr;</a>
+  </Card>
 </CardGrid>
