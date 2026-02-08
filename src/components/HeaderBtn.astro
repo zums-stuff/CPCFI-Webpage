@@ -1,4 +1,10 @@
-<a href="/welcome/bienvenida" class="clases-btn">
+---
+// Importamos la URL base configurada en astro.config.mjs
+// En local será "/" y en GitHub será "/CPCFI-Webpage/" automáticamente.
+const baseUrl = import.meta.env.BASE_URL;
+---
+
+<a href={baseUrl + "welcome/bienvenida/"} class="clases-btn">
   Clases
 </a>
 
@@ -8,20 +14,19 @@
     align-items: center;
     justify-content: center;
     
-    /* Usamos tu variable de acento (Naranja) */
     background-color: var(--sl-color-text-accent); 
-    color: #000000; /* Texto negro para contraste con el naranja */
+    color: #000000; 
     
     font-weight: 700;
     text-decoration: none;
     font-size: 0.9rem;
     padding: 0.4rem 1rem;
-    border-radius: 999px; /* Bordes totalmente redondos */
+    border-radius: 999px;
     transition: transform 0.2s, opacity 0.2s;
   }
 
   .clases-btn:hover {
     opacity: 0.9;
-    transform: scale(1.05); /* Efecto pop al pasar el mouse */
+    transform: scale(1.05); 
   }
 </style>
