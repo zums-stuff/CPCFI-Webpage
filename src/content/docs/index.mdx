@@ -22,29 +22,21 @@ import globosImg from '../../assets/CPCFI.png';
 <style>{`
   /* --- ESTILOS DE LA PORTADA --- */
   .custom-hero {
-    /* Fondo: Gradiente de Negro a Gris Tema */
     background: linear-gradient(180deg, #000000 0%, #131314 100%);
-        margin-top: -18rem !important;
-    
-    /* Espaciado interno */
+    margin-top: -18rem !important;
     padding-top: 3rem; 
     padding-bottom: 3rem;
-    
-    /* Full Width Hack */
     width: 100vw;
     position: relative;
     left: 50%;
     right: 50%;
     margin-left: -50vw;
     margin-right: -50vw;
-    
-    /* Alineación */
     margin-bottom: 2rem;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1.5rem; 
-    
     z-index: 1;
   }
 
@@ -58,7 +50,6 @@ import globosImg from '../../assets/CPCFI.png';
     display: block;
   }
 
-  /* Título */
   .gradient-title {
     font-family: system-ui, -apple-system, sans-serif;
     font-weight: 500;
@@ -77,6 +68,37 @@ import globosImg from '../../assets/CPCFI.png';
     .gradient-title { font-size: 1.5rem !important; }
     .custom-hero { margin-top: -1rem !important; } 
   }
+
+  /* --- TARJETAS COMO BOTONES COMPLETOS --- */
+  .card-link-wrapper {
+    text-decoration: none !important;
+    color: inherit !important;
+    display: block;
+    height: 100%;
+    border-radius: 0.5rem;
+  }
+
+  /* Controlamos el interior de la tarjeta Starlight */
+  .card-link-wrapper :global(.card) {
+    height: 100%;
+    transition: all 0.3s ease;
+    cursor: pointer; /* Fuerza el cursor de mano en toda la tarjeta */
+  }
+
+  /* Efecto al pasar el ratón */
+  .card-link-wrapper:hover :global(.card) {
+    border-color: #FCA311 !important;
+    background-color: rgba(252, 163, 17, 0.05) !important;
+    box-shadow: 0 4px 20px rgba(252, 163, 17, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .click-text {
+    color: #FCA311;
+    font-weight: 600;
+    display: block;
+    margin-top: 1rem;
+  }
 `}</style>
 
 <div style="text-align: center; margin-bottom: 2rem; color: #E3E3E3;">
@@ -84,16 +106,24 @@ import globosImg from '../../assets/CPCFI.png';
 </div>
 
 <CardGrid stagger>
-  <Card title="Últimas Clases" icon="document">
-    Repasa los temas de las clases que he dado.
-    <br/>
-  </Card>
-  <Card title="Recursos Útiles" icon="laptop">
-    Libros, jueces en línea y plantillas de código. (no sirve todavia xd)
-    <br/> <a href="/recursos/" style="color: #FCA311; text-decoration: none;">Ver Librería &rarr;</a>
-  </Card>
-  <Card title="Comunidad" icon="discord">
-    Únete al servidor y conecta con otros desarrolladores. (tampoco sirve xd)
-    <br/> <a href="/contacto/" style="color: #FCA311; text-decoration: none;">Conectar &rarr;</a>
-  </Card>
+  <a href="welcome/bienvenida/" class="card-link-wrapper">
+    <Card title="Últimas Clases" icon="document">
+      Repasa los temas de las clases que he dado.
+      <span class="click-text">Explorar &rarr;</span>
+    </Card>
+  </a>
+
+  <a href="recursos/" class="card-link-wrapper">
+    <Card title="Recursos Útiles" icon="laptop">
+      Libros, jueces en línea y plantillas de código. (no sirve todavia xd)
+      <span class="click-text">Ver Librería &rarr;</span>
+    </Card>
+  </a>
+
+  <a href="contacto/" class="card-link-wrapper">
+    <Card title="Comunidad" icon="discord">
+      Únete al servidor y conecta con otros desarrolladores. (tampoco sirve xd)
+      <span class="click-text">Conectar &rarr;</span>
+    </Card>
+  </a>
 </CardGrid>
