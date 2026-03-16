@@ -177,3 +177,4 @@ Para dominar estos conceptos y el manejo de índices, resuelve los siguientes pr
 * **[LeetCode 704 - Binary Search](https://leetcode.com/problems/binary-search/)**: Implementación pura para asegurar el manejo de punteros manuales.
 * **[LeetCode 34 - Find First and Last Position of Element in Sorted Array](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)**: Aplicación directa de `lower_bound` y `upper_bound` para delimitar rangos.
 * **[Codeforces - 2025 A. Two Screens](https://codeforces.com/problemset/problem/2025/A)**: Aplicación de binary search manual para encontrar un cuadrado.
+* **[Codeforces - 1676 E. Eating Queries](https://codeforces.com/problemset/problem/1676/E)** Aplicación de upper y lower bound con greedy.
